@@ -138,8 +138,6 @@ export default function Header() {
               <path d="M4 20c0-4 3.6-6 8-6s8 2 8 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
             </svg>
           </motion.button>
-          <motion.button 
-            aria-label="Carrito" 
           <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ display: 'flex', alignItems: 'center', zIndex: 1 }} aria-label="Home">
             <motion.img 
               src="/brand/logotipo-tulum.svg" 
