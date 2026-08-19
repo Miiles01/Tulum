@@ -270,6 +270,27 @@ export default function Home() {
             We are passionate about bringing the true taste of Mexico to your table. Every dish is a celebration of our culture, crafted with authentic recipes, fresh ingredients, and generations of tradition.
           </p>
         </div>
+
+        {/* ── TESTIMONIALS ── */}
+        <div style={{ padding: '0 20px 80px', maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+          {[
+            { quote: "The best Tacos al Pastor I've had outside of Mexico City. Authentic, fresh, and full of flavor.", author: "Maria G." },
+            { quote: "Amazing atmosphere and the Guacamole is to die for. You can really taste the tradition in every bite.", author: "James T." },
+            { quote: "A true gem! The Margarita Tradicional paired with their Ceviche makes for a perfect evening.", author: "Elena R." },
+          ].map((t, i) => (
+            <div key={i} style={{ background: '#FFFFFF', borderRadius: '24px', padding: '32px', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', gap: '4px', color: 'var(--rosa-neon)', fontSize: '18px' }}>
+                {'★★★★★'}
+              </div>
+              <p style={{ fontSize: '16px', color: 'rgba(96,3,4,0.85)', fontFamily: 'var(--font)', lineHeight: 1.6, flexGrow: 1, margin: 0 }}>
+                "{t.quote}"
+              </p>
+              <p style={{ fontSize: '15px', color: '#600304', fontFamily: 'var(--font)', fontWeight: 700, margin: 0 }}>
+                — {t.author}
+              </p>
+            </div>
+          ))}
+        </div>
         <div style={{ textAlign: 'center', paddingBottom: 'clamp(48px, 8vw, 96px)', marginTop: '60px' }}>
           <p ref={productsSubtextRef} style={{ fontSize: '15px', color: 'rgba(96,3,4,0.85)', fontWeight: 600, fontFamily: 'var(--font)', maxWidth: '380px', margin: '0 auto 30px', lineHeight: 1.5 }}>
             There are more flavors waiting for you. Explore our full menu and find your next favorite dish.
