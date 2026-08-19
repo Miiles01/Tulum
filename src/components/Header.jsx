@@ -125,32 +125,25 @@ export default function Header() {
           />
         </Link>
 
-        <div style={{ display: 'flex', gap: '6px', zIndex: 1 }}>
-          <motion.button
-            aria-label={user ? 'Mi cuenta' : 'Iniciar sesión'}
-            onClick={() => navigate(user ? '/cuenta' : '/iniciar-sesion')}
-            style={{ background: 'none', border: 'none', padding: '6px', display: 'flex' }}
-            animate={{ color: textColor }}
-            transition={{ duration: 0.3 }}
+        <div style={{ display: 'flex', gap: '6px', zIndex: 1, alignItems: 'center' }}>
+          <button 
+            aria-label="Reserve"
+            onClick={() => window.location.href = '#reserve'}
+            style={{ 
+              background: '#FFFFFF', 
+              color: '#600304', 
+              border: 'none', 
+              borderRadius: '999px', 
+              padding: '10px 20px', 
+              fontSize: '14px', 
+              fontWeight: 600, 
+              fontFamily: 'var(--font)', 
+              cursor: 'pointer',
+              whiteSpace: 'nowrap'
+            }}
           >
-            <svg width="21" height="21" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.8" />
-              <path d="M4 20c0-4 3.6-6 8-6s8 2 8 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-            </svg>
-          </motion.button>
-          <motion.button 
-            aria-label="Carrito" 
-            onClick={() => setDrawerOpen(true)} 
-            style={{ background: 'none', border: 'none', padding: '6px', display: 'flex', position: 'relative' }}
-            animate={{ color: textColor }}
-            transition={{ duration: 0.3 }}
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M6 8h12l-1.2 11a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 8Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-              <path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" strokeWidth="1.8" />
-            </svg>
-            {count > 0 && <span className="header-badge" style={{ position: 'absolute', top: 0, right: 0, background: 'var(--charcoal)', color: '#fff', borderRadius: '999px', fontSize: '10px', minWidth: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>{count}</span>}
-          </motion.button>
+            Reserve
+          </button>
         </div>
       </motion.header>
 

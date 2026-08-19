@@ -185,6 +185,24 @@ export default function Home() {
             <span style={{ color: 'var(--rosa-neon)', }}>on everything</span><br />
             That's the rule.
           </h2>
+          <div style={{ marginTop: '32px' }}>
+            <button 
+              onClick={() => window.location.href = '#reserve'}
+              style={{
+                background: '#FBEDE0', 
+                color: '#600304', 
+                border: 'none', 
+                borderRadius: '999px', 
+                padding: '16px 32px', 
+                fontSize: '16px', 
+                fontWeight: 600, 
+                fontFamily: 'var(--font)', 
+                cursor: 'pointer'
+              }}
+            >
+              Reserve your table
+            </button>
+          </div>
         </div>
       </section>
 
