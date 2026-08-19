@@ -114,12 +114,12 @@ export default function Header() {
           )}
         </motion.button>
 
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', zIndex: 1 }} aria-label="Inicio">
+        {/* Logo (fade in al hacer scroll) */}
+        <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ display: 'flex', alignItems: 'center', zIndex: 1 }} aria-label="Home">
           <motion.img
             src="/brand/logotipo-tulum.svg"
-            alt="Tulum Logo"
-            className="brand-logo"
-            style={{ height: '32px', opacity: logoOpacity }}
+            alt="Tulum"
+            style={{ height: '36px', marginLeft: '12px', opacity: logoOpacity }}
             animate={{ filter: logoFilter }}
             transition={{ duration: 0.3 }}
           />
@@ -138,92 +138,61 @@ export default function Header() {
               <path d="M4 20c0-4 3.6-6 8-6s8 2 8 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
             </svg>
           </motion.button>
-          <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ display: 'flex', alignItems: 'center', zIndex: 1 }} aria-label="Home">
-            <motion.img 
-              src="/brand/logotipo-tulum.svg" 
-              alt="Tulum" 
-              style={{ height: '36px', marginLeft: '12px', opacity: logoOpacity }} 
-            />
-          </Link>
+          <motion.button 
+            aria-label="Carrito" 
+            onClick={() => setDrawerOpen(true)} 
+            style={{ background: 'none', border: 'none', padding: '6px', display: 'flex', position: 'relative' }}
+            animate={{ color: textColor }}
+            transition={{ duration: 0.3 }}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M6 8h12l-1.2 11a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 8Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+              <path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" strokeWidth="1.8" />
+            </svg>
+            {count > 0 && <span className="header-badge" style={{ position: 'absolute', top: 0, right: 0, background: 'var(--charcoal)', color: '#fff', borderRadius: '999px', fontSize: '10px', minWidth: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>{count}</span>}
+          </motion.button>
+        </div>
+      </motion.header>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', zIndex: 1 }}>
-            <button 
-              className="icon-btn" 
-              onClick={() => setDrawerOpen(true)}
-              aria-label="Cart"
-              style={{ color: '#600304', background: 'none', border: 'none', cursor: 'pointer', padding: '8px' }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-              </svg>
-              {count > 0 && <span className="cart-badge" style={{ background: '#600304', color: '#FBEDE0', fontSize: '10px', padding: '2px 5px', borderRadius: '10px' }}>{count}</span>}
-            </button>
-            <button 
-              className="icon-btn" 
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              style={{ color: '#600304', background: 'none', border: 'none', cursor: 'pointer', padding: '8px' }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                {menuOpen ? (
-                  <>
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </>
-                ) : (
-                  <>
-                    <line x1="4" y1="12" x2="20" y2="12" />
-                    <line x1="4" y1="6" x2="20" y2="6" />
-                    <line x1="4" y1="18" x2="20" y2="18" />
-                  </>
-                )}
-              </svg>
-            </button>
-          </div>
-        </motion.div>
-      </header>
-
+      {/* Menú desplegable: panel que cubre la mitad de la pantalla, no fullscreen */}
       <AnimatePresence>
         {menuOpen && (
           <>
-            <motion.div 
-                initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
-                exit={{ opacity: 0 }} 
+            <motion.div
                 onClick={() => setMenuOpen(false)}
-                style={{ 
-                    position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.3)', 
-                    zIndex: 90, cursor: 'pointer' 
+                style={{
+                    position: 'fixed', inset: 0, height: '100svh', width: '100%',
+                    background: 'transparent', zIndex: 190, cursor: 'pointer'
                 }}
             />
             <motion.div
-                initial={{ opacity: 0, y: -20, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
-                exit={{ opacity: 0, y: -10, scale: 0.98, transition: { duration: 0.2 } }}
+                initial={{ opacity: 0, scale: 0.98, y: -15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.98, y: -15 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 style={{
                     position: 'fixed', 
                     left: '50%',
                     x: '-50%',
                     top: animatedTop,
-                    marginTop: '68px',
+                    marginTop: '68px', // Espacio para el navbar (altura aprox 54px + gap 14px)
                     width: isMobile ? animatedMobileWidth : animatedDesktopWidth,
                     maxHeight: 'calc(100vh - 100px)',
-                    backgroundColor: 'rgba(96, 3, 4, 0.95)',
+                    backgroundColor: 'rgba(28, 28, 31, 0.85)',
                     backdropFilter: 'blur(24px)',
                     WebkitBackdropFilter: 'blur(24px)',
                     zIndex: 200, 
                     display: 'flex', 
                     flexDirection: 'column',
                     overflowY: 'auto', 
-                    border: '1px solid rgba(251, 237, 224, 0.1)',
+                    border: '1px solid rgba(255,255,255,0.1)',
                     borderRadius: '32px',
                     boxShadow: '0 24px 70px rgba(0,0,0,0.4)',
                 }}
             >
                 <motion.div
                     className="menu-columns"
-                    style={{ paddingTop: '40px', paddingBottom: '40px', paddingLeft: '30px', paddingRight: '30px' }}
+                    style={{ paddingTop: '40px', paddingBottom: '40px' }}
                     initial="hidden"
                     animate="visible"
                     exit="hidden"
@@ -279,7 +248,7 @@ const mobileMenuLinkStyle = {
     fontFamily: 'var(--font)',
     fontWeight: 500,
     letterSpacing: '-0.02em',
-    color: '#FBEDE0',
+    color: 'var(--acero)',
     display: 'block',
     textDecoration: 'none',
     transition: 'opacity 0.2s',
