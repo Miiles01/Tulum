@@ -56,20 +56,24 @@ function TransitionBridge({ onColorChange }) {
     offset: ['start 60%', 'end start'],
   });
 
-  // Solo animamos el fondo del wrapper padre — igual que Lore District
+  // Anima fondo del wrapper padre Y el propio fondo de la sección
   const bgColor = useTransform(scrollYProgress, [0, 1], ['#600304', '#FBEDE0']);
+  // Texto: Crema cuando fondo es Vino, Vino cuando fondo es Crema
+  const textColor = useTransform(scrollYProgress, [0, 0.45, 0.55, 1], ['#FBEDE0', '#FBEDE0', '#600304', '#600304']);
+  const textSoft = useTransform(scrollYProgress, [0, 0.45, 0.55, 1], ['rgba(251,237,224,0.7)', 'rgba(251,237,224,0.7)', 'rgba(96,3,4,0.65)', 'rgba(96,3,4,0.65)']);
 
   useEffect(() => {
     onColorChange(bgColor);
   }, [bgColor, onColorChange]);
 
   return (
-    <section
+    <motion.section
       ref={ref}
       style={{
         padding: 'clamp(48px, 8vw, 96px) 20px',
         position: 'relative',
         zIndex: 1,
+        backgroundColor: bgColor,
       }}
     >
       <div
@@ -96,19 +100,19 @@ function TransitionBridge({ onColorChange }) {
               background: 'rgba(237, 74, 155, 0.12)',
               borderRadius: '10px',
             }}>{f.icon}</div>
-            <h3 style={{
-              fontSize: '17px', color: '#FBEDE0',
+            <motion.h3 style={{
+              fontSize: '17px', color: textColor,
               fontFamily: 'var(--font)', fontWeight: 600,
               margin: 0, textTransform: 'none',
-            }}>{f.titulo}</h3>
-            <p style={{
-              fontSize: '14px', color: 'rgba(251, 237, 224, 0.65)',
+            }}>{f.titulo}</motion.h3>
+            <motion.p style={{
+              fontSize: '14px', color: textSoft,
               lineHeight: 1.65, fontFamily: 'var(--font)', margin: 0,
-            }}>{f.texto}</p>
+            }}>{f.texto}</motion.p>
           </motion.div>
         ))}
       </div>
-    </section>
+    </motion.section>
   );
 }
 
