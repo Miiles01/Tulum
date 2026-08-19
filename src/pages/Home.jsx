@@ -276,9 +276,10 @@ export default function Home() {
         if (!element) return;
         const split = new SplitType(element, { types: 'words, chars' });
         
-        // Hacemos que cada palabra oculte el desbordamiento (overflow hidden)
-        // para que las letras parezca que "salen" desde abajo.
-        gsap.set(split.words, { overflow: 'hidden', display: 'inline-flex' });
+        // Forzamos el display de words y chars para evitar que se apilen verticalmente
+        // si el CSS inyectado por SplitType falla o carga tarde.
+        gsap.set(split.words, { overflow: 'hidden', display: 'inline-flex', flexWrap: 'nowrap' });
+        gsap.set(split.chars, { display: 'inline-block' });
         
         // Función para desordenar el arreglo (shuffle) y que aparezcan al azar
         const shuffleArray = (array) => {
@@ -311,6 +312,8 @@ export default function Home() {
         if (!element) return;
         const split = new SplitType(element, { types: 'words' });
         
+        gsap.set(split.words, { display: 'inline-block', marginRight: '0.25em' });
+
         gsap.from(split.words, {
           opacity: 0,
           y: 15,

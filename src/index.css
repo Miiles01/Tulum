@@ -1001,3 +1001,6 @@ input, select, textarea {
         color: rgba(242, 242, 242, 0.06);
     }
 }
+
+/* SplitType fallbacks */
+.word, .char { display: inline-block; }
