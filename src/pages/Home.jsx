@@ -63,7 +63,7 @@ function TransitionBridge({ onColorChange }) {
   const bgColor = useTransform(
     scrollYProgress,
     [0, 1],
-    ['#1c1c1f', '#ffffff']
+    ['#600304', '#FBEDE0']
   );
 
   // Publicar el motionValue al padre para que lo aplique al wrapper
@@ -337,7 +337,7 @@ export default function Home() {
   }
 
   return (
-    <div ref={wrapperRef} style={{ backgroundColor: '#1c1c1f' }}>
+    <div ref={wrapperRef} style={{ backgroundColor: '#600304' }}>
 
       {/* ── HERO ANIMADO (MWG 050 Style) ── */}
       <section ref={mwgHeroRootRef} className="mwg_effect050" style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
@@ -366,7 +366,7 @@ export default function Home() {
       {/* ── NUESTRA HISTORIA ── */}
       <section style={{ padding: 'clamp(80px, 10vw, 160px) 20px', textAlign: 'center', background: 'transparent' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <p style={{ fontSize: '14px', marginBottom: '16px', color: 'rgba(242, 242, 242, 0.65)', fontFamily: 'var(--font)' }}>Our story</p>
+          <p style={{ fontSize: '14px', marginBottom: '16px', color: 'rgba(251, 237, 224, 0.65)', fontFamily: 'var(--font)' }}>Our story</p>
           <h2 ref={historyTitleRef} style={styles.heroHeadline}>
             Salsa verde<br />
             <span style={{ color: 'var(--rosa-neon)', fontFamily: 'var(--font-accent)', fontWeight: 400, textTransform: 'lowercase' }}>on everything</span><br />
@@ -382,7 +382,7 @@ export default function Home() {
       <section className="productos-destacados-section" style={{ paddingTop: 'clamp(56px, 10vw, 120px)' }}>
         <div className="container" style={{ textAlign: 'center', marginBottom: '40px' }}>
           <p style={styles.eyebrow}>Our favorites for you</p>
-          <h2 ref={productsTitleRef} style={{ color: '#1c1c1f', fontSize: 'clamp(32px, 6vw, 72px)' }}>
+          <h2 ref={productsTitleRef} style={{ color: '#600304', fontSize: 'clamp(32px, 6vw, 72px)' }}>
             Dishes that tell a story
           </h2>
         </div>
@@ -415,7 +415,7 @@ export default function Home() {
         <div style={{ textAlign: 'center', paddingBottom: 'clamp(48px, 8vw, 96px)', marginTop: '60px' }}>
           <p ref={productsSubtextRef} style={{ 
             fontSize: '15px', 
-            color: 'rgba(28,28,31,0.65)', 
+            color: 'rgba(96, 3, 4,0.65)', 
             fontFamily: 'var(--font)', 
             maxWidth: '380px', 
             margin: '0 auto 30px',
@@ -445,7 +445,7 @@ const styles = {
   },
   heroBgOverlay: {
     position: 'absolute', inset: 0,
-    background: 'linear-gradient(to top, rgba(28,28,31,0.97) 25%, rgba(28,28,31,0.55) 65%, rgba(28,28,31,0.3) 100%)',
+    background: 'linear-gradient(to top, rgba(96, 3, 4,0.97) 25%, rgba(96, 3, 4,0.55) 65%, rgba(96, 3, 4,0.3) 100%)',
   },
   heroHeadline: {
     color: 'var(--acero)',
@@ -453,7 +453,7 @@ const styles = {
     lineHeight: 1.05, marginBottom: '16px',
   },
   heroSubtext: {
-    color: 'rgba(242, 242, 242, 0.75)',
+    color: 'rgba(251, 237, 224, 0.75)',
     fontSize: '16px', marginBottom: '24px',
     lineHeight: 1.4, fontFamily: 'var(--font)', textTransform: 'none',
   },
@@ -464,7 +464,7 @@ const styles = {
     fontWeight: 700, fontSize: '16px', display: 'inline-flex',
   },
   eyebrow: {
-    fontSize: '14px', marginBottom: '8px', color: 'rgba(28,28,31,0.5)',
+    fontSize: '14px', marginBottom: '8px', color: 'rgba(96, 3, 4,0.5)',
     textTransform: 'none', fontFamily: 'var(--font)',
   },
 };

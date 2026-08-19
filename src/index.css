@@ -1,18 +1,18 @@
 :root {
-  /* Paleta Lore District (Manual de Identidad v1.0) */
-  --obsidiana: #1c1c1f;
-  --acero: #f2f2f2;
+  /* Paleta Tulum */
+  --obsidiana: #600304; /* Fondo oscuro (antes negro) */
+  --acero: #FBEDE0; /* Texto/Fondo claro (antes blanco/acero) */
   --rosa-neon: #ed4a9b;
   --azul-distrito: #0e4eb5;
   --selva: #0f4724;
   --gradient-editorial: linear-gradient(135deg, #806c7b 0%, #f0c5b4 100%);
 
-  --white: #ffffff;
+  --white: #FBEDE0;
   --charcoal: var(--obsidiana);
   --pink: var(--rosa-neon);
   --cream: var(--acero);
   --text: var(--acero);
-  --text-soft: rgba(242, 242, 242, 0.65);
+  --text-soft: rgba(251, 237, 224, 0.65);
   --success: #3ED660;
   --danger: #ff5c5c;
   --gold: var(--rosa-neon);
