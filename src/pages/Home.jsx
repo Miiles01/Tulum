@@ -184,7 +184,7 @@ export default function Home() {
       {/* ── HISTORIA ── */}
       <section style={{ padding: 'clamp(80px, 10vw, 160px) 20px', textAlign: 'center', background: '#600304' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <p style={{ fontSize: '14px', marginBottom: '16px', color: 'rgba(251,237,224,0.65)', fontFamily: 'var(--font)' }}>Our story</p>
+          <p style={{ fontSize: '14px', marginBottom: '16px', color: 'rgba(251,237,224,0.65)', fontFamily: 'var(--font)' }}>The Tulum philosophy</p>
           <h2 ref={historyTitleRef} style={{ color: '#FBEDE0', fontSize: 'clamp(32px, 7vw, 56px)', lineHeight: 1.05, marginBottom: '16px' }}>
             Salsa verde<br />
             <span style={{ color: 'var(--rosa-neon)', fontFamily: 'var(--font-accent)', fontWeight: 400 }}>on everything</span><br />
