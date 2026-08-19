@@ -488,7 +488,7 @@ input, select, textarea {
 /* Carousel Styles */
 .carousel-section {
   margin-top: 48px;
-  padding-bottom: 24px;
+  padding-bottom: 32px;
 }
 .carousel-section h2 {
   padding: 0 20px;
@@ -1090,5 +1090,12 @@ input, select, textarea {
   }
   .mobile-only-hero {
     display: block !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .feature-card-mobile-padding {
+    padding-top: 32px;
+    padding-bottom: 32px;
   }
 }

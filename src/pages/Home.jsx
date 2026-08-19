@@ -58,6 +58,7 @@ function FeaturesSection() {
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.6, delay: i * 0.15, ease: 'easeOut' }}
             style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
+            className="feature-card-mobile-padding"
           >
             <div style={{ color: 'var(--rosa-neon)', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(237, 74, 155, 0.12)', borderRadius: '10px' }}>{f.icon}</div>
             <motion.h3 style={{ fontSize: '17px', color: '#600304', fontFamily: 'var(--font)', fontWeight: 600, margin: 0 }}>{f.titulo}</motion.h3>
