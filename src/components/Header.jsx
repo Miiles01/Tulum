@@ -188,17 +188,17 @@ export default function Header() {
                     }}
                 >
                     <nav style={styles.menuColNav}>
-                        <MenuItem to="/" onClick={() => setMenuOpen(false)}>Inicio</MenuItem>
-                        <MenuItem to="/productos" onClick={() => setMenuOpen(false)}>Productos</MenuItem>
-                        <MenuItem to="/acerca-de" onClick={() => setMenuOpen(false)}>Acerca de</MenuItem>
+                        <MenuItem to="/" onClick={() => setMenuOpen(false)}>Home</MenuItem>
+                        <MenuItem to="/productos" onClick={() => setMenuOpen(false)}>Menu</MenuItem>
+                        <MenuItem to="/acerca-de" onClick={() => setMenuOpen(false)}>About Us</MenuItem>
                         <MenuItem to={user ? '/cuenta' : '/iniciar-sesion'} onClick={() => setMenuOpen(false)}>
-                            {user ? 'Mi cuenta' : 'Iniciar sesión'}
+                            {user ? 'My Account' : 'Login'}
                         </MenuItem>
                     </nav>
 
                     <div style={styles.menuColLegal}>
-                        <MenuItem to="/politica-de-privacidad" small onClick={() => setMenuOpen(false)}>Política de privacidad</MenuItem>
-                        <MenuItem to="/terminos-y-condiciones" small onClick={() => setMenuOpen(false)}>Términos y condiciones</MenuItem>
+                        <MenuItem to="/politica-de-privacidad" small onClick={() => setMenuOpen(false)}>Privacy Policy</MenuItem>
+                        <MenuItem to="/terminos-y-condiciones" small onClick={() => setMenuOpen(false)}>Terms & Conditions</MenuItem>
                         <motion.div variants={itemVariants}>
                             <SocialLinks containerStyle={styles.menuSocialRow} linkStyle={styles.menuSocialLink} />
                         </motion.div>

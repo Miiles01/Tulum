@@ -31,15 +31,15 @@ export default function ProductCard({ product, dark = false }) {
       <div style={styles.imageWrap}>
         <img src={product.image_url} alt={product.name} style={styles.image} loading="lazy" />
         {hasDiscount && (
-          <div style={{ ...styles.badge, background: dark ? '#f2f2f2' : '#1c1c1f', color: dark ? '#1c1c1f' : '#fff' }}>
-            {product.discount_type === 'percentage' ? `-${product.discount_value}%` : 'OFERTA'}
+          <div style={{ ...styles.badge, background: dark ? '#FBEDE0' : '#600304', color: dark ? '#600304' : '#FBEDE0' }}>
+            {product.discount_type === 'percentage' ? `-${product.discount_value}%` : 'SALE'}
           </div>
         )}
       </div>
       <div style={styles.info}>
         <h3 style={{ ...styles.name, color: text.strong }}>{product.name}</h3>
         <p style={{ ...styles.priceRow, color: text.soft }}>
-          Desde <span style={{ ...styles.price, color: text.strong }}>{money(price)}</span>
+          From <span style={{ ...styles.price, color: text.strong }}>{money(price)}</span>
           {hasDiscount && <span style={{ ...styles.originalPrice, color: text.soft }}>{money(originalPrice)}</span>}
         </p>
       </div>
@@ -47,8 +47,8 @@ export default function ProductCard({ product, dark = false }) {
   );
 }
 
-const lightText = { strong: '#1c1c1f', soft: 'rgba(28, 28, 31, 0.6)' };
-const darkText = { strong: '#f2f2f2', soft: 'rgba(242, 242, 242, 0.6)' };
+const lightText = { strong: '#600304', soft: 'rgba(96, 3, 4, 0.6)' };
+const darkText = { strong: '#FBEDE0', soft: 'rgba(251, 237, 224, 0.6)' };
 
 const styles = {
   card: {
@@ -62,7 +62,7 @@ const styles = {
   imageWrap: {
     position: 'relative',
     aspectRatio: '4 / 5',
-    background: '#f2f2f2',
+    background: '#FBEDE0',
     borderRadius: 'var(--radius)',
     overflow: 'hidden',
   },

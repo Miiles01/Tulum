@@ -82,28 +82,28 @@ export default function Newsletter() {
 
   return (
     <section className="container" style={styles.section}>
-      <p style={styles.eyebrow}>Únete a la manada</p>
-      <h2 ref={headlineRef} style={styles.headline}>10% de descuento en tu primera compra</h2>
+      <p style={styles.eyebrow}>Join the family</p>
+      <h2 ref={headlineRef} style={styles.headline}>Get 10% off your first visit</h2>
       <p ref={subtextRef} style={styles.subtext}>
-        Suscríbete y entérate antes que nadie de nuevos lanzamientos, colecciones y bordados exclusivos.
+        Subscribe to be the first to know about new dishes, secret menus, and exclusive events.
       </p>
 
       {status === 'done' ? (
         <p style={styles.successMsg}>
-          Listo, ya estás dentro. Usa el código <strong>BIENVENIDA10</strong> en tu primera compra.
+          You're in. Show this code <strong>WELCOME10</strong> on your next visit.
         </p>
       ) : (
         <form onSubmit={handleSubmit} style={styles.form}>
           <input
             type="email"
             required
-            placeholder="tu@correo.com"
+            placeholder="your@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             style={styles.input}
           />
           <button className="btn btn-primary" disabled={status === 'loading'} style={styles.submitBtn}>
-            {status === 'loading' ? 'Enviando…' : 'Quiero mi descuento'}
+            {status === 'loading' ? 'Sending...' : 'Get my discount'}
           </button>
         </form>
       )}
@@ -120,7 +120,7 @@ const styles = {
   },
   eyebrow: {
     fontSize: '14px',
-    color: 'rgba(28, 28, 31, 0.65)',
+    color: 'rgba(96, 3, 4, 0.65)',
     marginBottom: '10px',
     textTransform: 'none',
     fontFamily: 'var(--font)',
@@ -128,11 +128,11 @@ const styles = {
   headline: {
     fontSize: 'clamp(24px, 4vw, 34px)',
     marginBottom: '14px',
-    color: '#1c1c1f',
+    color: '#600304',
   },
   subtext: {
     fontSize: '15px',
-    color: 'rgba(28, 28, 31, 0.65)',
+    color: 'rgba(96, 3, 4, 0.65)',
     lineHeight: 1.6,
     marginBottom: '28px',
     fontFamily: 'var(--font)',
@@ -147,9 +147,9 @@ const styles = {
     flex: '1 1 240px',
     padding: '15px 18px',
     borderRadius: '999px',
-    border: '1px solid rgba(28, 28, 31, 0.2)',
-    background: '#ffffff',
-    color: '#1c1c1f',
+    border: '1px solid rgba(96, 3, 4, 0.2)',
+    background: '#FBEDE0',
+    color: '#600304',
     fontSize: '15px',
   },
   submitBtn: {
@@ -159,10 +159,10 @@ const styles = {
   },
   successMsg: {
     fontSize: '15px',
-    color: '#1c1c1f',
+    color: '#600304',
     lineHeight: 1.6,
-    background: '#ffffff',
-    border: '1px solid rgba(28, 28, 31, 0.2)',
+    background: '#FBEDE0',
+    border: '1px solid rgba(96, 3, 4, 0.2)',
     borderRadius: '12px',
     padding: '18px 20px',
   },
