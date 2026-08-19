@@ -20,8 +20,9 @@
   --shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   --radius: 8px;
 
-  --font: 'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --font-display: 'Unbounded', var(--font);
+  --font: 'Metropolis', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-display: 'Metropolis', var(--font);
+  --font-accent: 'Nexa Script', cursive;
 
   color-scheme: dark;
   font-family: var(--font);

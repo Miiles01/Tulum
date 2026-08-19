@@ -22,27 +22,26 @@ const FEATURES = [
         <path d="M12 2L2 7l10 5 10-5-10-5z" /><path d="M2 17l10 5 10-5" /><path d="M2 12l10 5 10-5" />
       </svg>
     ),
-    titulo: 'Alto gramaje',
-    texto: 'Algodón 380g que se mantiene, lavado tras lavado.',
+    titulo: 'Fresh Ingredients',
+    texto: 'Sourced daily, never compromised. Authentic taste in every bite.',
   },
   {
     icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--rosa-neon)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10" /><path d="M8 12s1.5 2 4 2 4-2 4-2" />
-        <line x1="9" y1="9" x2="9.01" y2="9" strokeWidth="2.5" /><line x1="15" y1="9" x2="15.01" y2="9" strokeWidth="2.5" />
       </svg>
     ),
-    titulo: 'Bordado de calidad',
-    texto: 'Alta precisión. Los detalles no se destiñen ni deshilachan.',
+    titulo: 'Authentic Recipes',
+    texto: 'Passed down through generations. Real Mexican flavors.',
   },
   {
     icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--selva)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
       </svg>
     ),
-    titulo: 'Cultura pop',
-    texto: 'Íconos de animación, cine de culto y referencias que cuentan historias.',
+    titulo: 'Tulum Vibes',
+    texto: 'Experience the magic of the Riviera Maya right at your table.',
   },
 ];
 
@@ -367,12 +366,11 @@ export default function Home() {
       {/* ── NUESTRA HISTORIA ── */}
       <section style={{ padding: 'clamp(80px, 10vw, 160px) 20px', textAlign: 'center', background: 'transparent' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <p style={{ fontSize: '14px', marginBottom: '16px', color: 'rgba(242, 242, 242, 0.65)', fontFamily: 'var(--font)' }}>Nuestra historia</p>
+          <p style={{ fontSize: '14px', marginBottom: '16px', color: 'rgba(242, 242, 242, 0.65)', fontFamily: 'var(--font)' }}>Our story</p>
           <h2 ref={historyTitleRef} style={styles.heroHeadline}>
-            La cultura<br />
-            <span style={{ color: 'var(--rosa-neon)' }}>se viste.</span><br />
-            La historia<br />
-            continúa.
+            Salsa verde<br />
+            <span style={{ color: 'var(--rosa-neon)', fontFamily: 'var(--font-accent)', fontWeight: 400, textTransform: 'lowercase' }}>on everything</span><br />
+            That's the rule.
           </h2>
         </div>
       </section>
@@ -383,9 +381,9 @@ export default function Home() {
       {/* ── PRODUCTOS DESTACADOS (transparent, hereda el fondo animado del wrapper) ── */}
       <section className="productos-destacados-section" style={{ paddingTop: 'clamp(56px, 10vw, 120px)' }}>
         <div className="container" style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <p style={styles.eyebrow}>Nuestra colección para ti</p>
+          <p style={styles.eyebrow}>Our favorites for you</p>
           <h2 ref={productsTitleRef} style={{ color: '#1c1c1f', fontSize: 'clamp(32px, 6vw, 72px)' }}>
-            Prendas que cuentan tu historia
+            Dishes that tell a story
           </h2>
         </div>
 
@@ -423,9 +421,9 @@ export default function Home() {
             margin: '0 auto 30px',
             lineHeight: 1.5
           }}>
-            Hay más historias esperando por ti. Explora todos nuestros diseños y encuentra tu próxima pieza favorita.
+            There are more flavors waiting for you. Explore our full menu and find your next favorite dish.
           </p>
-          <Link to="/productos" className="btn btn-cream">Ver toda la colección</Link>
+          <Link to="/productos" className="btn btn-cream">View full menu</Link>
         </div>
       </section>
 
