@@ -300,7 +300,6 @@ export default function Home() {
           <p ref={productsSubtextRef} style={{ fontSize: '15px', color: 'rgba(96,3,4,0.85)', fontWeight: 600, fontFamily: 'var(--font)', maxWidth: '380px', margin: '0 auto 30px', lineHeight: 1.5 }}>
             There are more flavors waiting for you. Explore our full menu and find your next favorite dish.
           </p>
-          <Link to="/productos" className="btn btn-cream">View full menu</Link>
         </div>
       </section>
 
