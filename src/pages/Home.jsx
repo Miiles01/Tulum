@@ -48,7 +48,7 @@ const FEATURES = [
 // ─── Sección puente: dark → light ────────────────────────────────────────────
 // Esta sección actúa como zona de transición. Su propio fondo pasa de obsidiana
 // a blanco al scrollear por ella, jalando también al wrapper padre.
-function TransitionBridge() {
+function TransitionBridge({ onColorChange }) {
   const ref = useRef(null);
 
   // scrollYProgress = 0 cuando el top de la sección llega al 60% del viewport,
@@ -60,8 +60,14 @@ function TransitionBridge() {
   });
 
   const bgColor = useTransform(scrollYProgress, [0, 1], ['#600304', '#FBEDE0']);
+  // Hacemos que el texto "snap" de color para evitar camuflaje al 50%
   const textColor = useTransform(scrollYProgress, [0, 0.49, 0.51, 1], ['#FBEDE0', '#FBEDE0', '#600304', '#600304']);
   const textSoftColor = useTransform(scrollYProgress, [0, 0.49, 0.51, 1], ['rgba(251, 237, 224, 0.65)', 'rgba(251, 237, 224, 0.65)', 'rgba(96, 3, 4, 0.65)', 'rgba(96, 3, 4, 0.65)']);
+
+  // Publicar el motionValue al padre para que lo aplique al wrapper
+  useEffect(() => {
+    onColorChange(bgColor);
+  }, [bgColor, onColorChange]);
 
   return (
     <motion.section
@@ -70,7 +76,7 @@ function TransitionBridge() {
         padding: 'clamp(48px, 8vw, 96px) 20px',
         position: 'relative',
         zIndex: 1,
-        background: bgColor
+        // No le ponemos background aquí, hereda del wrapper
       }}
     >
       <div
@@ -86,7 +92,7 @@ function TransitionBridge() {
             key={f.titulo}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
+            viewport={{ once: true, margin: '0px' }} // Cambiado a 0px para que dispare antes
             transition={{ duration: 0.6, delay: i * 0.15, ease: 'easeOut' }}
             style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
           >
@@ -341,6 +347,19 @@ export default function Home() {
 
   // Callback que reciben las secciones puente: registran su motionValue
   // y empiezan a escribir el backgroundColor del wrapper directamente.
+  function handleColorChange(motionValue) {
+    if (activeBgRef.current) {
+      activeBgRef.current.destroy?.();
+    }
+    // Suscribirse al motionValue y escribir al DOM sin re-renders
+    const unsubscribe = motionValue.on('change', (val) => {
+      if (wrapperRef.current) {
+        wrapperRef.current.style.backgroundColor = val;
+      }
+    });
+    activeBgRef.current = { destroy: unsubscribe };
+  }
+
   return (
     <div ref={wrapperRef} style={{ backgroundColor: '#600304' }}>
 
@@ -380,71 +399,69 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FEATURES: zona de transición dark → light ── */}
-      <TransitionBridge />
+      {/* ── FEATURES: zona de transición dark → light, controlada por scrub ── */}
+      <TransitionBridge onColorChange={handleColorChange} />
 
-      <div style={{ background: '#FBEDE0', width: '100%' }}>
-        {/* ── PRODUCTOS DESTACADOS ── */}
-        <section className="productos-destacados-section" style={{ paddingTop: 'clamp(56px, 10vw, 120px)' }}>
-          <div className="container" style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <p style={styles.eyebrow}>Our favorites for you</p>
-            <h2 ref={productsTitleRef} style={{ color: '#600304', fontSize: 'clamp(32px, 6vw, 72px)' }}>
-              Dishes that tell a story
-            </h2>
-          </div>
-
-          {/* --- Mobile Carousel --- */}
-          <div className="mobile-only-carousel">
-            <div className="carousel-track" style={{ padding: '0 20px 16px', margin: '0' }}>
-              {featured.map((p) => (
-                <div key={p.id} className="carousel-item" style={{ minWidth: '260px' }}>
-                  <ProductCard product={p} />
-                </div>
-              ))}
-              <div style={{ width: '4px', flexShrink: 0 }} />
-            </div>
-          </div>
-
-          {/* --- Desktop GSAP Animation (MWG 087) --- */}
-          <div className="desktop-only-gsap mwg_effect087" ref={gsapRootRef}>
-            <div className="container" ref={pinHeightRef}>
-                <div className="cards" ref={gsapContainerRef}>
-                    {featured.map((p) => (
-                        <div className="card mwg087-card" key={p.id}>
-                            <div className="card-content">
-                                <div className="top" style={{ width: '100%', height: '350px' }}>
-                                    <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                                </div>
-                                <div className="bottom" style={{ marginTop: '24px', textAlign: 'left' }}>
-                                    <h3 style={{ fontSize: '24px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
-                                    <p style={{ fontSize: '15px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-          </div>
-
-          <div style={{ textAlign: 'center', paddingBottom: 'clamp(48px, 8vw, 96px)', marginTop: '60px' }}>
-            <p ref={productsSubtextRef} style={{ 
-              fontSize: '15px', 
-              color: 'rgba(96, 3, 4,0.65)', 
-              fontFamily: 'var(--font)', 
-              maxWidth: '380px', 
-              margin: '0 auto 30px',
-              lineHeight: 1.5
-            }}>
-              There are more flavors waiting for you. Explore our full menu and find your next favorite dish.
-            </p>
-            <Link to="/productos" className="btn btn-cream">View full menu</Link>
-          </div>
-        </section>
-
-        {/* ── NEWSLETTER ── */}
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Newsletter />
+      {/* ── PRODUCTOS DESTACADOS (transparent, hereda el fondo animado del wrapper) ── */}
+      <section className="productos-destacados-section" style={{ paddingTop: 'clamp(56px, 10vw, 120px)' }}>
+        <div className="container" style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <p style={styles.eyebrow}>Our favorites for you</p>
+          <h2 ref={productsTitleRef} style={{ color: '#600304', fontSize: 'clamp(32px, 6vw, 72px)' }}>
+            Dishes that tell a story
+          </h2>
         </div>
+
+        {/* --- Mobile Carousel --- */}
+        <div className="mobile-only-carousel">
+          <div className="carousel-track" style={{ padding: '0 20px 16px', margin: '0' }}>
+            {featured.map((p) => (
+              <div key={p.id} className="carousel-item" style={{ minWidth: '260px' }}>
+                <ProductCard product={p} />
+              </div>
+            ))}
+            <div style={{ width: '4px', flexShrink: 0 }} />
+          </div>
+        </div>
+
+        {/* --- Desktop GSAP Animation (MWG 087) --- */}
+        <div className="desktop-only-gsap mwg_effect087" ref={gsapRootRef}>
+          <div className="container" ref={pinHeightRef}>
+              <div className="cards" ref={gsapContainerRef}>
+                  {featured.map((p) => (
+                      <div className="card mwg087-card" key={p.id}>
+                          <div className="card-content">
+                              <div className="top" style={{ width: '100%', height: '350px' }}>
+                                  <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                              </div>
+                              <div className="bottom" style={{ marginTop: '24px', textAlign: 'left' }}>
+                                  <h3 style={{ fontSize: '24px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
+                                  <p style={{ fontSize: '15px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
+                              </div>
+                          </div>
+                      </div>
+                  ))}
+              </div>
+          </div>
+        </div>
+
+        <div style={{ textAlign: 'center', paddingBottom: 'clamp(48px, 8vw, 96px)', marginTop: '60px' }}>
+          <p ref={productsSubtextRef} style={{ 
+            fontSize: '15px', 
+            color: 'rgba(96, 3, 4,0.65)', 
+            fontFamily: 'var(--font)', 
+            maxWidth: '380px', 
+            margin: '0 auto 30px',
+            lineHeight: 1.5
+          }}>
+            There are more flavors waiting for you. Explore our full menu and find your next favorite dish.
+          </p>
+          <Link to="/productos" className="btn btn-cream">View full menu</Link>
+        </div>
+      </section>
+
+      {/* ── NEWSLETTER ── */}
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Newsletter />
       </div>
 
     </div>
