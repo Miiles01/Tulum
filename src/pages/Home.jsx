@@ -269,7 +269,7 @@ export default function Home() {
         </div>
 
         {/* ── TESTIMONIALS ── */}
-        <div style={{ padding: '0 20px 80px', maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+        <div className="testimonials-grid">
           {[
             { quote: "The best Tacos al Pastor I've had outside of Mexico City. Authentic, fresh, and full of flavor.", author: "Maria G." },
             { quote: "Amazing atmosphere and the Guacamole is to die for. You can really taste the tradition in every bite.", author: "James T." },
@@ -292,6 +292,8 @@ export default function Home() {
               </div>
             </div>
           ))}
+          {/* Spacer for mobile carousel right padding */}
+          <div style={{ width: '4px', flexShrink: 0, padding: 0, background: 'transparent' }} className="mobile-only-spacer" />
         </div>
         <div style={{ textAlign: 'center', paddingBottom: 'clamp(48px, 8vw, 96px)', marginTop: '60px' }}>
           <p ref={productsSubtextRef} style={{ fontSize: '15px', color: 'rgba(96,3,4,0.85)', fontWeight: 600, fontFamily: 'var(--font)', maxWidth: '380px', margin: '0 auto 30px', lineHeight: 1.5 }}>
