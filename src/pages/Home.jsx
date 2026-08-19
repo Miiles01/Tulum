@@ -257,6 +257,15 @@ export default function Home() {
           </div>
         </div>
 
+        {/* ── ABOUT US ── */}
+        <div id="about-us" style={{ textAlign: 'center', padding: 'clamp(64px, 10vw, 120px) 20px', maxWidth: '800px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(40px, 8vw, 80px)', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '24px', lineHeight: 1.1, fontWeight: 700 }}>
+            Somos Tulum.
+          </h2>
+          <p style={{ fontSize: 'clamp(16px, 2vw, 20px)', color: 'rgba(96,3,4,0.85)', fontFamily: 'var(--font)', lineHeight: 1.6, maxWidth: '600px', margin: '0 auto' }}>
+            We are passionate about bringing the true taste of Mexico to your table. Every dish is a celebration of our heritage, crafted with authentic recipes, fresh ingredients, and generations of tradition.
+          </p>
+        </div>
         <div style={{ textAlign: 'center', paddingBottom: 'clamp(48px, 8vw, 96px)', marginTop: '60px' }}>
           <p ref={productsSubtextRef} style={{ fontSize: '15px', color: 'rgba(96,3,4,0.85)', fontWeight: 600, fontFamily: 'var(--font)', maxWidth: '380px', margin: '0 auto 30px', lineHeight: 1.5 }}>
             There are more flavors waiting for you. Explore our full menu and find your next favorite dish.

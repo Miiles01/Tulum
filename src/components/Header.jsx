@@ -204,10 +204,8 @@ export default function Header() {
                     <nav style={styles.menuColNav}>
                         <MenuItem onClick={() => handleScroll('body')}>Home</MenuItem>
                         <MenuItem onClick={() => handleScroll('.productos-destacados-section')}>Menu</MenuItem>
-                        <MenuItem onClick={() => handleScroll('.site-footer')}>About Us</MenuItem>
-                        <MenuItem to={user ? '/cuenta' : '/iniciar-sesion'} onClick={() => setMenuOpen(false)}>
-                            {user ? 'My Account' : 'Login'}
-                        </MenuItem>
+                        <MenuItem onClick={() => handleScroll('#about-us')}>About Us</MenuItem>
+
                     </nav>
 
                     <div style={styles.menuColLegal}>
