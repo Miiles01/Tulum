@@ -21,7 +21,7 @@ export default function Footer() {
         <img 
           src="/brand/logotipo-tulum.svg" 
           alt="Tulum Logo" 
-          style={{ width: '100%', maxWidth: '800px', height: 'auto', display: 'block', margin: '0 auto', opacity: 0.9 }} 
+          style={{ width: '90%', maxWidth: '1200px', height: 'auto', display: 'block', margin: '0 auto', opacity: 0.9 }} 
         />
       </div>
     </footer>
@@ -38,7 +38,7 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 0,
+    paddingBottom: '40px',
   },
   text: {
     fontSize: '16px',
