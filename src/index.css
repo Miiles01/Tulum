@@ -568,35 +568,51 @@ input, select, textarea {
 }
 
 /* GSAP MWG Effect 068 */
-.mwg_effect068 {
-    position: relative;
-    width: 100%;
-}
-.mwg_effect068 .pin-height {
-    height: 500vh; /* Scroll space */
-}
-.mwg_effect068 .gsap-container {
-    height: 100vh;
+.mwg_effect087 {
     overflow: hidden;
-    perspective: 100vw;
-    transform-style: preserve-3d;
     position: relative;
     width: 100%;
 }
-.mwg_effect068 .media {
-    width: 28vw;
-    min-width: 280px;
-    max-width: 360px;
-    position: absolute;
-    right: 100%;
-    top: 50vh;
-    transform: translate(0, -50%);
-    transform-style: preserve-3d;
+.mwg_effect087 .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
 }
-.mwg_effect068 .media .product-card-link {
-    transform: scale(1.05) translate3d(0, 0, 8vw);
-    backface-visibility: hidden;
-    border-radius: 12px;
+.mwg_effect087 .cards {
+    display: flex;
+    width: max-content;
+    white-space: nowrap;
+    gap: 24px;
+    will-change: transform;
+    padding: 0 calc(100vw + 1px);
+    align-items: center;
+}
+.mwg_effect087 .card {
+    position: relative;
+    width: clamp(280px, 30vw, 380px);
+}
+.mwg_effect087 .card-content {
+    width: 100%;
+    height: 100%;
+    will-change: transform;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    white-space: initial;
+    color: var(--obsidiana);
+    padding: 24px;
+    background: transparent;
+}
+
+@media (max-width: 768px) {
+    .mwg_effect087 .card {
+        width: 75vw;
+    }
+    .mwg_effect087 .card-content {
+        padding: 16px;
+    }
 }
 
 /* Marquee Testimonials */

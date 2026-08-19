@@ -144,9 +144,12 @@ export default function Home() {
   useEffect(() => {
     // Dummy products para que se activen las animaciones de GSAP en Tulum
     setFeatured([
-      { id: 1, slug: 'dummy-1', title: 'Tulum Special', price: 500, images: '["placeholder-playera-1up.svg"]' },
-      { id: 2, slug: 'dummy-2', title: 'Tulum Magic', price: 600, images: '["placeholder-playera-arcade.svg"]' },
-      { id: 3, slug: 'dummy-3', title: 'Tulum Vibes', price: 700, images: '["placeholder-playera-culto.svg"]' }
+      { id: 1, title: 'Tacos al Pastor', description: 'Traditional pork tacos with pineapple, onion, and cilantro on handmade corn tortillas.', images: '["tulum/24.webp"]' },
+      { id: 2, title: 'Guacamole Clásico', description: 'Freshly mashed avocados, tomatoes, onions, cilantro, and lime juice. Served with warm tortilla chips.', images: '["tulum/25.webp"]' },
+      { id: 3, title: 'Ceviche Tulum', description: 'Fresh fish marinated in lime juice with cucumber, red onion, jalapeño, and avocado.', images: '["tulum/26.webp"]' },
+      { id: 4, title: 'Enchiladas Verdes', description: 'Three chicken enchiladas topped with our signature green salsa, crema, and queso fresco.', images: '["tulum/27.webp"]' },
+      { id: 5, title: 'Margarita Tradicional', description: 'Classic lime margarita with a salt rim, made with premium tequila and fresh juices.', images: '["tulum/28.webp"]' },
+      { id: 6, title: 'Churros con Chocolate', description: 'Crispy fried dough tossed in cinnamon sugar, served with a rich chocolate dipping sauce.', images: '["tulum/29.webp"]' },
     ]);
   }, []);
 
@@ -157,50 +160,69 @@ export default function Home() {
       let mm = gsap.matchMedia();
       
       mm.add("(min-width: 768px)", () => {
+        // MWG 087 - Horizontal scroll
         const root = gsapRootRef.current;
-        const pinHeight = pinHeightRef.current;
-        const container = gsapContainerRef.current;
-        const medias = gsap.utils.toArray('.media', root);
+        const container = pinHeightRef.current;
+        const cardsContainer = gsapContainerRef.current;
+        const cards = gsap.utils.toArray('.mwg087-card', root);
 
-        if (!root || !pinHeight || !container || medias.length === 0) return;
+        if (!root || !container || !cardsContainer || cards.length === 0) return;
 
-        // Limpiar animaciones previas en este trigger si las hay (por hot reload)
         ScrollTrigger.getAll().forEach(t => {
-          if(t.vars.trigger === root || t.vars.trigger === pinHeight) t.kill();
+          if(t.vars.trigger === container || t.vars.trigger === root) t.kill();
         });
 
-        const master = gsap.timeline({
+        // Calculate scroll distance
+        const distance = cardsContainer.scrollWidth - window.innerWidth;
+
+        const scrollTween = gsap.to(cardsContainer, {
+            x: -distance,
+            ease: 'none',
             scrollTrigger: {
-                trigger: pinHeight,
+                trigger: container,
+                pin: true,
+                scrub: true,
                 start: 'top top',
-                end: 'bottom bottom',
-                pin: container,
-                scrub: true
+                end: '+=' + distance
             }
         });
 
-        const isPortrait = window.innerHeight > window.innerWidth;
-        const step = (isPortrait ? 1.5 : 1) / medias.length;
+        let transformBetweenTwoTicks = 0;
+        let oldTransform = 0;
+        
+        const tick = () => {
+            const currentTransform = gsap.getProperty(cardsContainer, "x");
+            transformBetweenTwoTicks = currentTransform - oldTransform;
+            oldTransform = currentTransform;
+        };
 
-        medias.forEach((media, i) => {
-            const tl = gsap.timeline();
-
-            tl.fromTo(media, {
-                rotateX: -90,
-                zIndex: medias.length - i
+        const transformCard = (el) => {
+            gsap.fromTo(el, {
+                xPercent: -transformBetweenTwoTicks * 3,
             }, {
-                xPercent: 100,
-                x: window.innerWidth,
-                rotateX: 90,
-                ease: 'power1.inOut',
-                duration: 1.1
+                xPercent: 0,
+                ease: 'power3.out',
+                duration: 0.7
             });
-            tl.set(media, {
-                zIndex: 0,
-                ease: 'power1.in',
-            }, "-=0.55");
+        };
 
-            master.add(tl, i * step);
+        cards.forEach(card => {
+            ScrollTrigger.create({
+                trigger: card,
+                containerAnimation: scrollTween,
+                start: 'left 100%',
+                end: 'right 0%',
+                onEnter: () => transformCard(card.children[0]),
+                onEnterBack: () => transformCard(card.children[0])
+            });
+        });
+
+        ScrollTrigger.create({
+            trigger: root,
+            onEnter: () => gsap.ticker.add(tick),
+            onLeave: () => gsap.ticker.remove(tick),
+            onEnterBack: () => gsap.ticker.add(tick),
+            onLeaveBack: () => gsap.ticker.remove(tick),
         });
       });
 
@@ -380,13 +402,21 @@ export default function Home() {
             </div>
           </div>
 
-          {/* --- Desktop GSAP Animation --- */}
-          <div className="desktop-only-gsap mwg_effect068" ref={gsapRootRef}>
-            <div className="pin-height" ref={pinHeightRef}>
-                <div className="gsap-container" ref={gsapContainerRef}>
+          {/* --- Desktop GSAP Animation (MWG 087) --- */}
+          <div className="desktop-only-gsap mwg_effect087" ref={gsapRootRef}>
+            <div className="container" ref={pinHeightRef}>
+                <div className="cards" ref={gsapContainerRef}>
                     {featured.map((p) => (
-                        <div key={p.id} className="media">
-                            <ProductCard product={p} />
+                        <div className="card mwg087-card" key={p.id}>
+                            <div className="card-content">
+                                <div className="top" style={{ width: '100%', height: '350px', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(96,3,4,0.1)' }}>
+                                    <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                </div>
+                                <div className="bottom" style={{ marginTop: '24px', textAlign: 'left' }}>
+                                    <h3 style={{ fontSize: '24px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
+                                    <p style={{ fontSize: '15px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
+                                </div>
+                            </div>
                         </div>
                     ))}
                 </div>
