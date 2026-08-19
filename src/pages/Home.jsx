@@ -202,26 +202,23 @@ export default function Home() {
 
         {/* Mobile: carousel horizontal nativo */}
         <div className="mobile-only-carousel">
+          <div style={{ padding: '0 20px 24px', textAlign: 'left' }}>
+            <p style={{ fontSize: '14px', marginBottom: '8px', color: 'rgba(96,3,4,0.5)', fontFamily: 'var(--font)' }}>Our favorites for you</p>
+            <h2 style={{ fontSize: 'clamp(36px, 10vw, 48px)', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '16px', fontWeight: 700, lineHeight: 1.1 }}>Dishes that tell a story</h2>
+            <p style={{ fontSize: '15px', color: '#600304', opacity: 0.8, lineHeight: 1.5 }}>Every recipe holds a piece of our heritage. Sourced daily and prepared with passion, these are the flavors that define Tulum.</p>
+          </div>
           <div className="carousel-track" style={{ padding: '0 20px 16px' }}>
-            {featured.map((p) => (
+            {featured.filter(p => !p.isTitleCard).map((p) => (
               <div key={p.id} className="carousel-item" style={{ minWidth: '280px', maxWidth: '320px', scrollSnapAlign: 'start' }}>
-                {p.isTitleCard ? (
-                  <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center', textAlign: 'left' }}>
-                    <p style={{ fontSize: '14px', marginBottom: '8px', color: 'rgba(96,3,4,0.5)', fontFamily: 'var(--font)' }}>Our favorites for you</p>
-                    <h2 style={{ fontSize: 'clamp(36px, 10vw, 48px)', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '16px', fontWeight: 700, lineHeight: 1.1 }}>{p.title}</h2>
-                    <p style={{ fontSize: '15px', color: '#600304', opacity: 0.8, lineHeight: 1.5 }}>{p.description}</p>
+                <div style={{ padding: '16px', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ width: '100%', height: '280px' }}>
+                    <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                   </div>
-                ) : (
-                  <div style={{ padding: '16px', display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ width: '100%', height: '280px' }}>
-                      <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                    </div>
-                    <div style={{ marginTop: '20px', textAlign: 'left' }}>
-                      <h3 style={{ fontSize: '22px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
-                      <p style={{ fontSize: '14px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
-                    </div>
+                  <div style={{ marginTop: '20px', textAlign: 'left' }}>
+                    <h3 style={{ fontSize: '22px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
+                    <p style={{ fontSize: '14px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
                   </div>
-                )}
+                </div>
               </div>
             ))}
             <div style={{ width: '4px', flexShrink: 0 }} />
