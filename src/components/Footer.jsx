@@ -18,10 +18,10 @@ export default function Footer() {
 
       {/* Logo grande al fondo — cierre visual de la página */}
       <div style={styles.footerLogoWrap}>
-        <img
-          src="/brand/lore-footer.svg"
-          alt="Lore District"
-          style={styles.footerLogo}
+        <img 
+          src="/brand/logotipo-tulum.svg" 
+          alt="Tulum Logo" 
+          style={{ width: '100%', maxWidth: '800px', height: 'auto', display: 'block', margin: '0 auto', opacity: 0.9 }} 
         />
       </div>
     </footer>

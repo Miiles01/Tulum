@@ -102,9 +102,10 @@ export default function Header() {
 
         <Link to="/" style={{ display: 'flex', alignItems: 'center', zIndex: 1 }} aria-label="Inicio">
           <motion.img
-            src="/brand/logotipo-lore.svg"
-            alt="Lore"
-            style={{ height: '24px', opacity: logoOpacity }}
+            src="/brand/logotipo-tulum.svg"
+            alt="Tulum Logo"
+            className="brand-logo"
+            style={{ height: '32px', opacity: logoOpacity }}
             animate={{ filter: logoFilter }}
             transition={{ duration: 0.3 }}
           />
