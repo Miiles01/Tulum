@@ -130,36 +130,37 @@ input, select, textarea {
   border-radius: 4px;
   border: 1px solid transparent;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.1rem;
   text-transform: uppercase;
   transition: all 0.15s ease;
+  font-family: var(--font);
 }
 .btn:active { transform: scale(0.98); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* Botón principal: Rosa Neón, alto voltaje */
+/* Botón principal: Tulum Dark */
 .btn-primary {
-  background: var(--rosa-neon);
-  color: var(--obsidiana);
-  border-color: var(--rosa-neon);
+  background: var(--obsidiana);
+  color: var(--white);
+  border-color: var(--obsidiana);
 }
 .btn-primary:hover {
   background: transparent;
-  color: var(--rosa-neon);
-  border-color: var(--rosa-neon);
+  color: var(--obsidiana);
+  border-color: var(--obsidiana);
 }
 
-/* Botón secundario: Acero sobre Obsidiana */
+/* Botón secundario: Tulum Outline */
 .btn-cream {
-  background: var(--acero);
+  background: transparent;
   color: var(--obsidiana);
-  border-color: var(--acero);
+  border-color: var(--obsidiana);
 }
 .btn-cream:hover {
-  background: transparent;
-  color: var(--acero);
-  border-color: var(--acero);
+  background: var(--obsidiana);
+  color: var(--white);
+  border-color: var(--obsidiana);
 }
 
 /* Botón outline */
