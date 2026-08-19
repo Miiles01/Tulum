@@ -69,7 +69,6 @@ h1, h2 {
   color: var(--acero);
   margin: 0;
   font-weight: 900;
-  text-transform: uppercase;
   letter-spacing: -0.02em;
 }
 h3, h4 {
@@ -121,6 +120,38 @@ input, select, textarea {
   font-size: 16px;
 }
 
+/* ------------------- Utilidades ------------------- */
+.text-center { text-align: center; }
+.mt-4 { margin-top: 32px; }
+.mb-2 { margin-bottom: 16px; }
+
+/* ------------------- Contenedores Básicos ------------------- */
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ------------------- Componentes ------------------- */
+
+/* Badge */
+.badge {
+  background: var(--rosa-neon);
+  color: var(--obsidiana);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* Botones */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -132,7 +163,6 @@ input, select, textarea {
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.1rem;
-  text-transform: uppercase;
   transition: all 0.15s ease;
   font-family: var(--font);
 }
@@ -902,7 +932,6 @@ input, select, textarea {
 }
 .mwg_effect073 .label {
     font-size: 14px;
-    text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--rosa-neon);
     margin-bottom: 16px;

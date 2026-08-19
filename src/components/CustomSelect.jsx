@@ -168,7 +168,6 @@ export default function CustomSelect({
                           fontSize: '11px',
                           fontWeight: 700,
                           color: 'var(--text-soft)',
-                          textTransform: 'uppercase',
                           letterSpacing: '0.8px',
                           background: '#f4f4f4',
                           borderTop: idx > 0 ? '1px solid var(--border)' : 'none',
