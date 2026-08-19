@@ -22,7 +22,6 @@
 
   --font: 'Metropolis', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-display: 'Metropolis', var(--font);
-  --font-accent: 'Nexa Script', cursive;
 
   color-scheme: dark;
   font-family: var(--font);
@@ -1072,5 +1071,24 @@ input, select, textarea {
   }
   .menu-image-left {
     display: block;
+  }
+}
+
+/* ------------------------
+   HERO VISIBILITY
+------------------------- */
+.desktop-only-hero {
+  display: block;
+}
+.mobile-only-hero {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .desktop-only-hero {
+    display: none !important;
+  }
+  .mobile-only-hero {
+    display: block !important;
   }
 }

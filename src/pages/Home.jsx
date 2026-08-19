@@ -126,7 +126,7 @@ export default function Home() {
       });
 
       // ── MWG 050: Hero ──
-      mm.add('(min-width: 0px)', () => {
+      mm.add('(min-width: 768px)', () => {
         const heroRoot      = mwgHeroRootRef.current;
         const heroPinHeight = mwgHeroPinHeightRef.current;
         const heroContainer = mwgHeroContainerRef.current;
@@ -164,8 +164,8 @@ export default function Home() {
   return (
     <div style={{ background: '#600304' }}>
 
-      {/* ── HERO MWG 050 ── */}
-      <section ref={mwgHeroRootRef} className="mwg_effect050" style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
+      {/* ── HERO MWG 050 (DESKTOP) ── */}
+      <section ref={mwgHeroRootRef} className="mwg_effect050 desktop-only-hero" style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
         <div ref={mwgHeroPinHeightRef} className="pin-height" style={{ height: '400dvh' }}>
           <div ref={mwgHeroContainerRef} className="mwg-container" style={{ position: 'relative', height: '100dvh', width: '100%', display: 'block', zIndex: 1 }}>
             <picture className="real-image"><source media="(max-width: 768px)" srcSet="/covers/mobile/1.webp" /><img src="/covers/desktop/1.webp" alt="Tulum 1" /></picture>
@@ -174,6 +174,11 @@ export default function Home() {
             <picture className="real-image"><source media="(max-width: 768px)" srcSet="/covers/mobile/4.webp" /><img src="/covers/desktop/4.webp" alt="Tulum 4" /></picture>
           </div>
         </div>
+      </section>
+
+      {/* ── HERO MOBILE (STATIC) ── */}
+      <section className="mobile-only-hero" style={{ width: '100%', height: '100dvh', position: 'relative' }}>
+        <img src="/brand/portada-mobile.png" alt="Tulum" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
       </section>
 
       {/* ── HISTORIA ── */}
