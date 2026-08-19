@@ -141,22 +141,16 @@ export default function Home() {
         }).to(realImages.slice(1), { scale: 1.005, ease: 'expo.inOut', duration: 8, stagger: 1.2 });
       });
 
-      // ── Títulos SplitType ──
+      // ── Títulos ──
       const animateTitle = (el) => {
         if (!el) return;
-        // Fix for mobile: avoid inline-flex and overflow hidden which breaks wrapping and cursive fonts
-        const split = new SplitType(el, { types: 'words, chars' });
-        gsap.set(split.words, { display: 'inline-block', overflow: 'visible' });
-        gsap.set(split.chars, { display: 'inline-block', overflow: 'visible' });
-        const shuffled = [...split.chars].sort(() => Math.random() - 0.5);
-        gsap.from(shuffled, { opacity: 0, y: 20, ease: 'power3.out', duration: 0.6, stagger: 0.02, scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' } });
+        // Animación simple de fade up sin SplitType para evitar que las letras se apilen verticalmente en móviles y rompan el diseño
+        gsap.from(el, { opacity: 0, y: 30, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' } });
       };
 
       const animateSubtext = (el) => {
         if (!el) return;
-        const split = new SplitType(el, { types: 'words' });
-        gsap.set(split.words, { display: 'inline-block', marginRight: '0.25em' });
-        gsap.from(split.words, { opacity: 0, y: 15, stagger: 0.06, duration: 0.5, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none reverse' } });
+        gsap.from(el, { opacity: 0, y: 15, duration: 0.8, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none reverse' } });
       };
 
       animateTitle(historyTitleRef.current);
@@ -188,7 +182,7 @@ export default function Home() {
           <p style={{ fontSize: '14px', marginBottom: '16px', color: 'rgba(251,237,224,0.65)', fontFamily: 'var(--font)' }}>The Tulum philosophy</p>
           <h2 ref={historyTitleRef} style={{ color: '#FBEDE0', fontSize: 'clamp(32px, 7vw, 56px)', lineHeight: 1.05, marginBottom: '16px' }}>
             Salsa verde<br />
-            <span style={{ color: 'var(--rosa-neon)', fontFamily: 'var(--font-accent)', fontWeight: 400 }}>on everything</span><br />
+            <span style={{ color: 'var(--rosa-neon)', }}>on everything</span><br />
             That's the rule.
           </h2>
         </div>
@@ -261,7 +255,7 @@ export default function Home() {
         <div id="about-us" style={{ textAlign: 'center', padding: 'clamp(64px, 10vw, 120px) 20px', maxWidth: '800px', margin: '0 auto' }}>
           <h2 ref={aboutTitleRef} style={{ fontSize: 'clamp(32px, 7vw, 64px)', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '24px', lineHeight: 1.1, fontWeight: 700 }}>
             We are Tulum.<br />
-            <span style={{ color: 'var(--rosa-neon)', fontFamily: 'var(--font-accent)', fontWeight: 400 }}>More than a meal,</span><br />
+            <span style={{ color: 'var(--rosa-neon)', }}>More than a meal,</span><br />
             a taste of our heritage.
           </h2>
           <p style={{ fontSize: 'clamp(16px, 2vw, 20px)', color: 'rgba(96,3,4,0.85)', fontFamily: 'var(--font)', lineHeight: 1.6, maxWidth: '600px', margin: '0 auto' }}>
