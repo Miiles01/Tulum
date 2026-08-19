@@ -1,19 +1,12 @@
-import { useRef, useState, useEffect, useLayoutEffect } from 'react';
+import { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SplitType from 'split-type';
-import { api } from '../api';
-import ProductCard from '../components/ProductCard';
 import Newsletter from '../components/Newsletter';
 
 gsap.registerPlugin(ScrollTrigger);
-
-// Equivalente al GSAP scrub: true de NJB.
-// useScroll({ target }) devuelve scrollYProgress [0..1] dentro de la sección.
-// useTransform lo mapea a un color exacto — sin delays, sin CSS transitions,
-// sin React state. El color es 1:1 con el scroll, igual que el scrub de GSAP.
 
 const FEATURES = [
   {
@@ -45,10 +38,10 @@ const FEATURES = [
   },
 ];
 
-// ─── Sección puente: dark → light ────────────────────────────────────────────
-// Esta sección actúa como zona de transición. Su propio fondo pasa de obsidiana
-// a blanco al scrollear por ella, jalando también al wrapper padre.
-function TransitionBridge({ onColorChange }) {
+// ─── Sección puente: dark (Vino) → light (Crema) ─────────────────────────────
+// Tiene su propio fondo animado. El texto arranca en Crema y hace snap a Vino
+// cuando el fondo ya es suficientemente claro — siempre contrasta.
+function TransitionBridge() {
   const ref = useRef(null);
 
   const { scrollYProgress } = useScroll({
@@ -56,15 +49,12 @@ function TransitionBridge({ onColorChange }) {
     offset: ['start 60%', 'end start'],
   });
 
-  // Anima fondo del wrapper padre Y el propio fondo de la sección
-  const bgColor = useTransform(scrollYProgress, [0, 1], ['#600304', '#FBEDE0']);
-  // Texto: Crema cuando fondo es Vino, Vino cuando fondo es Crema
+  const bgColor   = useTransform(scrollYProgress, [0, 1],              ['#600304', '#FBEDE0']);
   const textColor = useTransform(scrollYProgress, [0, 0.45, 0.55, 1], ['#FBEDE0', '#FBEDE0', '#600304', '#600304']);
-  const textSoft = useTransform(scrollYProgress, [0, 0.45, 0.55, 1], ['rgba(251,237,224,0.7)', 'rgba(251,237,224,0.7)', 'rgba(96,3,4,0.65)', 'rgba(96,3,4,0.65)']);
-
-  useEffect(() => {
-    onColorChange(bgColor);
-  }, [bgColor, onColorChange]);
+  const textSoft  = useTransform(scrollYProgress, [0, 0.45, 0.55, 1], [
+    'rgba(251,237,224,0.7)', 'rgba(251,237,224,0.7)',
+    'rgba(96,3,4,0.65)',     'rgba(96,3,4,0.65)',
+  ]);
 
   return (
     <motion.section
@@ -103,7 +93,7 @@ function TransitionBridge({ onColorChange }) {
             <motion.h3 style={{
               fontSize: '17px', color: textColor,
               fontFamily: 'var(--font)', fontWeight: 600,
-              margin: 0, textTransform: 'none',
+              margin: 0,
             }}>{f.titulo}</motion.h3>
             <motion.p style={{
               fontSize: '14px', color: textSoft,
@@ -116,218 +106,152 @@ function TransitionBridge({ onColorChange }) {
   );
 }
 
-// ─── Sección puente: light → dark ────────────────────────────────────────────
-// Eliminada: El newsletter y el footer ahora son blancos, ya no regresamos al modo oscuro.
-
 // ─── Home ─────────────────────────────────────────────────────────────────────
 export default function Home() {
   const [featured, setFeatured] = useState([]);
-  const wrapperRef = useRef(null);
-  
-  // Refs para animación GSAP (3D Products - MWG 068)
-  const gsapRootRef = useRef(null);
-  const pinHeightRef = useRef(null);
+
+  // Refs GSAP MWG 087 (horizontal scroll)
+  const gsapRootRef      = useRef(null);
+  const pinHeightRef     = useRef(null);
   const gsapContainerRef = useRef(null);
 
-  // Refs para animación GSAP (Hero - MWG 050)
-  const mwgHeroRootRef = useRef(null);
+  // Refs GSAP MWG 050 (hero)
+  const mwgHeroRootRef      = useRef(null);
   const mwgHeroPinHeightRef = useRef(null);
   const mwgHeroContainerRef = useRef(null);
-  
-  // Refs para títulos animados
-  const heroTitleRef = useRef(null);
-  const productsTitleRef = useRef(null);
-  const productsSubtextRef = useRef(null);
-  const historyTitleRef = useRef(null);
 
-  // El motionValue activo que controla el fondo — se reemplaza cuando
-  // una sección nueva "toma el control"
-  const activeBgRef = useRef(null);
+  // Refs títulos animados
+  const historyTitleRef    = useRef(null);
+  const productsTitleRef   = useRef(null);
+  const productsSubtextRef = useRef(null);
 
   useEffect(() => {
-    // Dummy products para que se activen las animaciones de GSAP en Tulum
     setFeatured([
-      { id: 1, title: 'Tacos al Pastor', description: 'Traditional pork tacos with pineapple, onion, and cilantro on handmade corn tortillas.', images: '["tulum/24.webp"]' },
-      { id: 2, title: 'Guacamole Clásico', description: 'Freshly mashed avocados, tomatoes, onions, cilantro, and lime juice. Served with warm tortilla chips.', images: '["tulum/25.webp"]' },
-      { id: 3, title: 'Ceviche Tulum', description: 'Fresh fish marinated in lime juice with cucumber, red onion, jalapeño, and avocado.', images: '["tulum/26.webp"]' },
-      { id: 4, title: 'Enchiladas Verdes', description: 'Three chicken enchiladas topped with our signature green salsa, crema, and queso fresco.', images: '["tulum/27.webp"]' },
-      { id: 5, title: 'Margarita Tradicional', description: 'Classic lime margarita with a salt rim, made with premium tequila and fresh juices.', images: '["tulum/28.webp"]' },
-      { id: 6, title: 'Churros con Chocolate', description: 'Crispy fried dough tossed in cinnamon sugar, served with a rich chocolate dipping sauce.', images: '["tulum/29.webp"]' },
+      { id: 1, title: 'Tacos al Pastor',      description: 'Traditional pork tacos with pineapple, onion, and cilantro on handmade corn tortillas.',                  images: '["tulum/24.webp"]' },
+      { id: 2, title: 'Guacamole Clásico',    description: 'Freshly mashed avocados, tomatoes, onions, cilantro, and lime juice. Served with warm tortilla chips.',   images: '["tulum/25.webp"]' },
+      { id: 3, title: 'Ceviche Tulum',        description: 'Fresh fish marinated in lime juice with cucumber, red onion, jalapeño, and avocado.',                      images: '["tulum/26.webp"]' },
+      { id: 4, title: 'Enchiladas Verdes',    description: 'Three chicken enchiladas topped with our signature green salsa, crema, and queso fresco.',                 images: '["tulum/27.webp"]' },
+      { id: 5, title: 'Margarita Tradicional',description: 'Classic lime margarita with a salt rim, made with premium tequila and fresh juices.',                      images: '["tulum/28.webp"]' },
+      { id: 6, title: 'Churros con Chocolate',description: 'Crispy fried dough tossed in cinnamon sugar, served with a rich chocolate dipping sauce.',                 images: '["tulum/29.webp"]' },
     ]);
   }, []);
 
   useLayoutEffect(() => {
     if (featured.length === 0) return;
 
-    let ctx = gsap.context(() => {
-      let mm = gsap.matchMedia();
-      
-      mm.add("(min-width: 768px)", () => {
-        // MWG 087 - Horizontal scroll
-        const root = gsapRootRef.current;
-        const container = pinHeightRef.current;
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+
+      // ── MWG 087: horizontal scroll (desktop) ──
+      mm.add('(min-width: 768px)', () => {
+        const root           = gsapRootRef.current;
+        const container      = pinHeightRef.current;
         const cardsContainer = gsapContainerRef.current;
-        const cards = gsap.utils.toArray('.mwg087-card', root);
+        const cards          = gsap.utils.toArray('.mwg087-card', root);
 
         if (!root || !container || !cardsContainer || cards.length === 0) return;
 
         ScrollTrigger.getAll().forEach(t => {
-          if(t.vars.trigger === container || t.vars.trigger === root) t.kill();
+          if (t.vars.trigger === container || t.vars.trigger === root) t.kill();
         });
 
-        // Calculate scroll distance
-        const distance = cardsContainer.scrollWidth - window.innerWidth;
-
+        const distance   = cardsContainer.scrollWidth - window.innerWidth;
         const scrollTween = gsap.to(cardsContainer, {
-            x: -distance,
-            ease: 'none',
-            scrollTrigger: {
-                trigger: container,
-                pin: true,
-                scrub: true,
-                start: 'top top',
-                end: '+=' + distance
-            }
+          x: -distance,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: container,
+            pin: true,
+            scrub: true,
+            start: 'top top',
+            end: '+=' + distance,
+          },
         });
 
         let transformBetweenTwoTicks = 0;
         let oldTransform = 0;
-        
         const tick = () => {
-            const currentTransform = gsap.getProperty(cardsContainer, "x");
-            transformBetweenTwoTicks = currentTransform - oldTransform;
-            oldTransform = currentTransform;
+          const cur = gsap.getProperty(cardsContainer, 'x');
+          transformBetweenTwoTicks = cur - oldTransform;
+          oldTransform = cur;
         };
-
         const transformCard = (el) => {
-            gsap.fromTo(el, {
-                xPercent: -transformBetweenTwoTicks * 3,
-            }, {
-                xPercent: 0,
-                ease: 'power3.out',
-                duration: 0.7
-            });
+          gsap.fromTo(el, { xPercent: -transformBetweenTwoTicks * 3 }, { xPercent: 0, ease: 'power3.out', duration: 0.7 });
         };
 
         cards.forEach(card => {
-            ScrollTrigger.create({
-                trigger: card,
-                containerAnimation: scrollTween,
-                start: 'left 100%',
-                end: 'right 0%',
-                onEnter: () => transformCard(card.children[0]),
-                onEnterBack: () => transformCard(card.children[0])
-            });
+          ScrollTrigger.create({
+            trigger: card,
+            containerAnimation: scrollTween,
+            start: 'left 100%',
+            end: 'right 0%',
+            onEnter:     () => transformCard(card.children[0]),
+            onEnterBack: () => transformCard(card.children[0]),
+          });
         });
 
         ScrollTrigger.create({
-            trigger: root,
-            onEnter: () => gsap.ticker.add(tick),
-            onLeave: () => gsap.ticker.remove(tick),
-            onEnterBack: () => gsap.ticker.add(tick),
-            onLeaveBack: () => gsap.ticker.remove(tick),
+          trigger: root,
+          onEnter:     () => gsap.ticker.add(tick),
+          onLeave:     () => gsap.ticker.remove(tick),
+          onEnterBack: () => gsap.ticker.add(tick),
+          onLeaveBack: () => gsap.ticker.remove(tick),
         });
       });
 
-      // MWG 050 Hero Animation (Todas las resoluciones)
-      mm.add("(min-width: 0px)", () => {
-        const heroRoot = mwgHeroRootRef.current;
+      // ── MWG 050: Hero ──
+      mm.add('(min-width: 0px)', () => {
+        const heroRoot      = mwgHeroRootRef.current;
         const heroPinHeight = mwgHeroPinHeightRef.current;
         const heroContainer = mwgHeroContainerRef.current;
-        
-        if (heroRoot && heroPinHeight && heroContainer) {
-          const realImages = gsap.utils.toArray('.real-image', heroContainer);
-          
-          ScrollTrigger.getAll().forEach(t => {
-            if(t.vars.trigger === heroRoot || t.vars.trigger === heroPinHeight) t.kill();
-          });
 
-          // En el efecto original, el z-index de las imágenes se apila
-          realImages.forEach((img, i) => {
-              gsap.set(img, { zIndex: i + 1, scale: 0 });
-          });
-          
-          // Arrancamos con la primera imagen (Logo Lore) completamente escalada (1.005)
-          gsap.set(realImages[0], { scale: 1.005 });
-          
-          // Adelantamos la animación de la segunda imagen para que ya se vea un poco en el centro
-          gsap.set(realImages[1], { scale: 0.25 });
+        if (!heroRoot || !heroPinHeight || !heroContainer) return;
 
-          // Creamos la línea de tiempo usando los exactos valores del MWG 050
-          // (duración larga y solapamiento) y usamos scrub: 2 para simular el quickTo
-          const heroMaster = gsap.timeline({
-            scrollTrigger: {
-              trigger: heroPinHeight,
-              start: 'top top',
-              end: '+=4000', // Suficiente espacio de scroll para el efecto completo
-              pin: heroContainer,
-              scrub: 1.5 // Simula la inercia del Observer original
-            }
-          });
+        const realImages = gsap.utils.toArray('.real-image', heroContainer);
 
-          heroMaster.to(realImages.slice(1), {
-            scale: 1.005,
-            ease: "expo.inOut",
-            duration: 8,
-            stagger: 1.2
-          });
-        }
+        ScrollTrigger.getAll().forEach(t => {
+          if (t.vars.trigger === heroRoot || t.vars.trigger === heroPinHeight) t.kill();
+        });
+
+        realImages.forEach((img, i) => gsap.set(img, { zIndex: i + 1, scale: 0 }));
+        gsap.set(realImages[0], { scale: 1.005 });
+        gsap.set(realImages[1], { scale: 0.25 });
+
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: heroPinHeight,
+            start: 'top top',
+            end: '+=4000',
+            pin: heroContainer,
+            scrub: 1.5,
+          },
+        }).to(realImages.slice(1), { scale: 1.005, ease: 'expo.inOut', duration: 8, stagger: 1.2 });
       });
 
-      // Animación de los títulos con SplitType (MWG Effect 046 Style - Letras Aleatorias)
-      const animateTitle = (element) => {
-        if (!element) return;
-        const split = new SplitType(element, { types: 'words, chars' });
-        
-        // Forzamos el display de words y chars para evitar que se apilen verticalmente
-        // si el CSS inyectado por SplitType falla o carga tarde.
+      // ── Títulos animados con SplitType ──
+      const animateTitle = (el) => {
+        if (!el) return;
+        const split = new SplitType(el, { types: 'words, chars' });
         gsap.set(split.words, { overflow: 'hidden', display: 'inline-flex', flexWrap: 'nowrap' });
         gsap.set(split.chars, { display: 'inline-block' });
-        
-        // Función para desordenar el arreglo (shuffle) y que aparezcan al azar
-        const shuffleArray = (array) => {
-          const arr = [...array];
-          for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-          }
-          return arr;
-        };
 
-        const shuffledChars = shuffleArray(split.chars);
-        
-        gsap.from(shuffledChars, {
+        const shuffled = [...split.chars].sort(() => Math.random() - 0.5);
+        gsap.from(shuffled, {
           y: '110%',
-          ease: "power4.out",
+          ease: 'power4.out',
           duration: 0.8,
-          stagger: 0.025, // Velocidad a la que salen las letras
-          scrollTrigger: {
-            trigger: element,
-            start: "top 85%",
-            toggleActions: "play none none reverse", // Se reproduce solo, no depende del scroll
-          }
+          stagger: 0.025,
+          scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' },
         });
       };
 
-      animateTitle(heroTitleRef.current);
-      // Animación para subtextos (Por palabras, fade-up suave)
-      const animateSubtext = (element) => {
-        if (!element) return;
-        const split = new SplitType(element, { types: 'words' });
-        
+      const animateSubtext = (el) => {
+        if (!el) return;
+        const split = new SplitType(el, { types: 'words' });
         gsap.set(split.words, { display: 'inline-block', marginRight: '0.25em' });
-
         gsap.from(split.words, {
-          opacity: 0,
-          y: 15,
-          stagger: 0.06,
-          duration: 0.5,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: element,
-            start: "top 90%",
-            toggleActions: "play none none reverse",
-          }
+          opacity: 0, y: 15, stagger: 0.06, duration: 0.5, ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none reverse' },
         });
       };
 
@@ -335,98 +259,66 @@ export default function Home() {
       animateTitle(productsTitleRef.current);
       animateSubtext(productsSubtextRef.current);
 
-      // --- Fin de Animaciones ---
-
-    }, wrapperRef);
+    });
 
     return () => ctx.revert();
   }, [featured]);
 
-  // Callback que reciben las secciones puente: registran su motionValue
-  // y empiezan a escribir el backgroundColor del wrapper directamente.
-  function handleColorChange(motionValue) {
-    if (activeBgRef.current) {
-      activeBgRef.current.destroy?.();
-    }
-
-    // Aplicar el color INICIAL inmediatamente (por si el usuario recarga la página ya scrolleado)
-    if (wrapperRef.current) {
-      wrapperRef.current.style.backgroundColor = motionValue.get();
-    }
-
-    // Suscribirse al motionValue y escribir al DOM sin re-renders
-    const unsubscribe = motionValue.on('change', (val) => {
-      if (wrapperRef.current) {
-        wrapperRef.current.style.backgroundColor = val;
-      }
-    });
-    activeBgRef.current = { destroy: unsubscribe };
-  }
-
   return (
-    <div ref={wrapperRef} style={{ backgroundColor: '#600304' }}>
+    <div style={{ background: '#600304' }}>
 
-      {/* ── HERO ANIMADO (MWG 050 Style) ── */}
+      {/* ── HERO MWG 050 ── */}
       <section ref={mwgHeroRootRef} className="mwg_effect050" style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
         <div ref={mwgHeroPinHeightRef} className="pin-height" style={{ height: '400vh' }}>
-            <div ref={mwgHeroContainerRef} className="mwg-container" style={{ position: 'relative', height: '100vh', width: '100%', display: 'block', zIndex: 1 }}>
-                <picture className="real-image">
-                  <source media="(max-width: 768px)" srcSet="/covers/mobile/1.webp" />
-                  <img src="/covers/desktop/1.webp" alt="Tulum Cover 1" />
-                </picture>
-                <picture className="real-image">
-                  <source media="(max-width: 768px)" srcSet="/covers/mobile/2.webp" />
-                  <img src="/covers/desktop/2.webp" alt="Tulum Cover 2" />
-                </picture>
-                <picture className="real-image">
-                  <source media="(max-width: 768px)" srcSet="/covers/mobile/3.webp" />
-                  <img src="/covers/desktop/3.webp" alt="Tulum Cover 3" />
-                </picture>
-                <picture className="real-image">
-                  <source media="(max-width: 768px)" srcSet="/covers/mobile/4.webp" />
-                  <img src="/covers/desktop/4.webp" alt="Tulum Cover 4" />
-                </picture>
-            </div>
+          <div ref={mwgHeroContainerRef} className="mwg-container" style={{ position: 'relative', height: '100vh', width: '100%', display: 'block', zIndex: 1 }}>
+            <picture className="real-image"><source media="(max-width: 768px)" srcSet="/covers/mobile/1.webp" /><img src="/covers/desktop/1.webp" alt="Tulum 1" /></picture>
+            <picture className="real-image"><source media="(max-width: 768px)" srcSet="/covers/mobile/2.webp" /><img src="/covers/desktop/2.webp" alt="Tulum 2" /></picture>
+            <picture className="real-image"><source media="(max-width: 768px)" srcSet="/covers/mobile/3.webp" /><img src="/covers/desktop/3.webp" alt="Tulum 3" /></picture>
+            <picture className="real-image"><source media="(max-width: 768px)" srcSet="/covers/mobile/4.webp" /><img src="/covers/desktop/4.webp" alt="Tulum 4" /></picture>
+          </div>
         </div>
       </section>
 
-      {/* ── NUESTRA HISTORIA ── */}
-      <section style={{ padding: 'clamp(80px, 10vw, 160px) 20px', textAlign: 'center', background: 'transparent' }}>
+      {/* ── HISTORIA ── */}
+      <section style={{ padding: 'clamp(80px, 10vw, 160px) 20px', textAlign: 'center', background: '#600304' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <p style={{ fontSize: '14px', marginBottom: '16px', color: 'rgba(251, 237, 224, 0.65)', fontFamily: 'var(--font)' }}>Our story</p>
-          <h2 ref={historyTitleRef} style={styles.heroHeadline}>
+          <p style={{ fontSize: '14px', marginBottom: '16px', color: 'rgba(251,237,224,0.65)', fontFamily: 'var(--font)' }}>Our story</p>
+          <h2 ref={historyTitleRef} style={{ color: '#FBEDE0', fontSize: 'clamp(32px, 7vw, 56px)', lineHeight: 1.05, marginBottom: '16px' }}>
             Salsa verde<br />
-            <span style={{ color: 'var(--rosa-neon)', fontFamily: 'var(--font-accent)', fontWeight: 400, textTransform: 'lowercase' }}>on everything</span><br />
+            <span style={{ color: 'var(--rosa-neon)', fontFamily: 'var(--font-accent)', fontWeight: 400 }}>on everything</span><br />
             That's the rule.
           </h2>
         </div>
       </section>
 
-      {/* ── FEATURES: zona de transición dark → light, controlada por scrub ── */}
-      <TransitionBridge onColorChange={handleColorChange} />
+      {/* ── TRANSICIÓN VINO → CREMA (su propio fondo animado) ── */}
+      <TransitionBridge />
 
-      {/* ── PRODUCTOS DESTACADOS (transparent, hereda el fondo animado del wrapper) ── */}
-      <section className="productos-destacados-section" style={{ paddingTop: 'clamp(56px, 10vw, 120px)' }}>
+      {/* ── PRODUCTOS DESTACADOS — fondo Crema fijo ── */}
+      <section
+        className="productos-destacados-section"
+        style={{ background: '#FBEDE0', paddingTop: 'clamp(56px, 10vw, 120px)' }}
+      >
         <div className="container" style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <p style={styles.eyebrow}>Our favorites for you</p>
+          <p style={{ fontSize: '14px', marginBottom: '8px', color: 'rgba(96,3,4,0.5)', fontFamily: 'var(--font)' }}>Our favorites for you</p>
           <h2 ref={productsTitleRef} style={{ color: '#600304', fontSize: 'clamp(32px, 6vw, 72px)' }}>
             Dishes that tell a story
           </h2>
         </div>
 
-        {/* --- Mobile Carousel --- */}
+        {/* Mobile: carousel horizontal nativo */}
         <div className="mobile-only-carousel">
-          <div className="carousel-track" style={{ padding: '0 20px 16px', margin: '0' }}>
+          <div className="carousel-track" style={{ padding: '0 20px 16px' }}>
             {featured.map((p) => (
               <div key={p.id} className="carousel-item" style={{ minWidth: '280px', maxWidth: '320px', scrollSnapAlign: 'start' }}>
-                <div className="card-content" style={{ padding: '16px', display: 'flex', flexDirection: 'column' }}>
-                    <div className="top" style={{ width: '100%', height: '280px' }}>
-                        <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                    </div>
-                    <div className="bottom" style={{ marginTop: '20px', textAlign: 'left' }}>
-                        <h3 style={{ fontSize: '22px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
-                        <p style={{ fontSize: '14px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
-                    </div>
+                <div style={{ padding: '16px', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ width: '100%', height: '280px' }}>
+                    <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  </div>
+                  <div style={{ marginTop: '20px', textAlign: 'left' }}>
+                    <h3 style={{ fontSize: '22px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
+                    <p style={{ fontSize: '14px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -434,35 +326,31 @@ export default function Home() {
           </div>
         </div>
 
-        {/* --- Desktop GSAP Animation (MWG 087) --- */}
+        {/* Desktop: GSAP MWG 087 horizontal pinned */}
         <div className="desktop-only-gsap mwg_effect087" ref={gsapRootRef}>
           <div className="container" ref={pinHeightRef}>
-              <div className="cards" ref={gsapContainerRef}>
-                  {featured.map((p) => (
-                      <div className="card mwg087-card" key={p.id}>
-                          <div className="card-content">
-                              <div className="top" style={{ width: '100%', height: '350px' }}>
-                                  <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                              </div>
-                              <div className="bottom" style={{ marginTop: '24px', textAlign: 'left' }}>
-                                  <h3 style={{ fontSize: '24px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
-                                  <p style={{ fontSize: '15px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
-                              </div>
-                          </div>
-                      </div>
-                  ))}
-              </div>
+            <div className="cards" ref={gsapContainerRef}>
+              {featured.map((p) => (
+                <div className="card mwg087-card" key={p.id}>
+                  <div className="card-content">
+                    <div className="top" style={{ width: '100%', height: '350px' }}>
+                      <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    </div>
+                    <div className="bottom" style={{ marginTop: '24px', textAlign: 'left' }}>
+                      <h3 style={{ fontSize: '24px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
+                      <p style={{ fontSize: '15px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
         <div style={{ textAlign: 'center', paddingBottom: 'clamp(48px, 8vw, 96px)', marginTop: '60px' }}>
-          <p ref={productsSubtextRef} style={{ 
-            fontSize: '15px', 
-            color: 'rgba(96, 3, 4,0.65)', 
-            fontFamily: 'var(--font)', 
-            maxWidth: '380px', 
-            margin: '0 auto 30px',
-            lineHeight: 1.5
+          <p ref={productsSubtextRef} style={{
+            fontSize: '15px', color: 'rgba(96,3,4,0.65)', fontFamily: 'var(--font)',
+            maxWidth: '380px', margin: '0 auto 30px', lineHeight: 1.5,
           }}>
             There are more flavors waiting for you. Explore our full menu and find your next favorite dish.
           </p>
@@ -470,44 +358,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── NEWSLETTER ── */}
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      {/* ── NEWSLETTER — fondo Crema fijo ── */}
+      <div style={{ background: '#FBEDE0', display: 'flex', justifyContent: 'center' }}>
         <Newsletter />
       </div>
 
     </div>
   );
 }
-
-const styles = {
-  heroSection: { position: 'relative', overflow: 'hidden' },
-  heroBgWrap:  { position: 'absolute', inset: 0, zIndex: 0 },
-  heroBgImg: {
-    width: '100%', height: '100%',
-    objectFit: 'cover', objectPosition: 'center 20%', display: 'block',
-  },
-  heroBgOverlay: {
-    position: 'absolute', inset: 0,
-    background: 'linear-gradient(to top, rgba(96, 3, 4,0.97) 25%, rgba(96, 3, 4,0.55) 65%, rgba(96, 3, 4,0.3) 100%)',
-  },
-  heroHeadline: {
-    color: 'var(--acero)',
-    fontSize: 'clamp(32px, 7vw, 56px)',
-    lineHeight: 1.05, marginBottom: '16px',
-  },
-  heroSubtext: {
-    color: 'rgba(251, 237, 224, 0.75)',
-    fontSize: '16px', marginBottom: '24px',
-    lineHeight: 1.4, fontFamily: 'var(--font)', textTransform: 'none',
-  },
-  heroBtn: {
-    background: 'var(--rosa-neon)', color: 'var(--obsidiana)',
-    borderRadius: '999px', padding: '16px 32px',
-    border: 'none', textTransform: 'none',
-    fontWeight: 700, fontSize: '16px', display: 'inline-flex',
-  },
-  eyebrow: {
-    fontSize: '14px', marginBottom: '8px', color: 'rgba(96, 3, 4,0.5)',
-    textTransform: 'none', fontFamily: 'var(--font)',
-  },
-};
