@@ -150,7 +150,12 @@ export default function Home() {
   const activeBgRef = useRef(null);
 
   useEffect(() => {
-    api.get('products.php?featured=1').then(setFeatured).catch(() => {});
+    // Dummy products para que se activen las animaciones de GSAP en Tulum
+    setFeatured([
+      { id: 1, slug: 'dummy-1', title: 'Tulum Special', price: 500, images: '["placeholder-playera-1up.svg"]' },
+      { id: 2, slug: 'dummy-2', title: 'Tulum Magic', price: 600, images: '["placeholder-playera-arcade.svg"]' },
+      { id: 3, slug: 'dummy-3', title: 'Tulum Vibes', price: 700, images: '["placeholder-playera-culto.svg"]' }
+    ]);
   }, []);
 
   useLayoutEffect(() => {
