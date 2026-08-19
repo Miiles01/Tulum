@@ -256,8 +256,23 @@ export default function Home() {
       };
 
       animateTitle(historyTitleRef.current);
-      animateTitle(productsTitleRef.current);
       animateSubtext(productsSubtextRef.current);
+
+      // Título de productos: fade-up simple (sin SplitType para evitar bug de apilamiento)
+      if (productsTitleRef.current) {
+        gsap.from(productsTitleRef.current, {
+          opacity: 0,
+          y: 30,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: productsTitleRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse',
+          },
+        });
+      }
+
 
     });
 
