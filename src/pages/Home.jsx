@@ -344,20 +344,20 @@ export default function Home() {
         <div ref={mwgHeroPinHeightRef} className="pin-height" style={{ height: '400vh' }}>
             <div ref={mwgHeroContainerRef} className="mwg-container" style={{ position: 'relative', height: '100vh', width: '100%', display: 'block', zIndex: 1 }}>
                 <picture className="real-image">
-                  <source media="(max-width: 768px)" srcSet="/covers/mobile/1.png" />
-                  <img src="/covers/desktop/1.png" alt="Lore Cover 1" />
+                  <source media="(max-width: 768px)" srcSet="/covers/mobile/1.png?v=tulum" />
+                  <img src="/covers/desktop/1.png?v=tulum" alt="Tulum Cover 1" />
                 </picture>
                 <picture className="real-image">
-                  <source media="(max-width: 768px)" srcSet="/covers/mobile/2.png" />
-                  <img src="/covers/desktop/2.png" alt="Lore Cover 2" />
+                  <source media="(max-width: 768px)" srcSet="/covers/mobile/2.png?v=tulum" />
+                  <img src="/covers/desktop/2.png?v=tulum" alt="Tulum Cover 2" />
                 </picture>
                 <picture className="real-image">
-                  <source media="(max-width: 768px)" srcSet="/covers/mobile/3.png" />
-                  <img src="/covers/desktop/3.png" alt="Lore Cover 3" />
+                  <source media="(max-width: 768px)" srcSet="/covers/mobile/3.png?v=tulum" />
+                  <img src="/covers/desktop/3.png?v=tulum" alt="Tulum Cover 3" />
                 </picture>
                 <picture className="real-image">
-                  <source media="(max-width: 768px)" srcSet="/covers/mobile/4.png" />
-                  <img src="/covers/desktop/4.png" alt="Lore Cover 4" />
+                  <source media="(max-width: 768px)" srcSet="/covers/mobile/4.png?v=tulum" />
+                  <img src="/covers/desktop/4.png?v=tulum" alt="Tulum Cover 4" />
                 </picture>
             </div>
         </div>
