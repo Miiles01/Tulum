@@ -1,7 +1,6 @@
 import { useState, useRef, useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import SplitType from 'split-type';
 import { api } from '../api';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -11,53 +10,20 @@ export default function Newsletter() {
   const [status, setStatus] = useState('idle'); // idle | loading | done | error
   const [error, setError] = useState('');
   
-  const headlineRef = useRef(null);
-  const subtextRef = useRef(null);
+  const containerRef = useRef(null);
 
   useLayoutEffect(() => {
     let ctx = gsap.context(() => {
-      const element = headlineRef.current;
-      if (!element) return;
-
-      const split = new SplitType(element, { types: 'words, chars' });
-      
-      gsap.set(split.words, { overflow: 'hidden', display: 'inline-flex' });
-      
-      const shuffleArray = (array) => {
-        const arr = [...array];
-        for (let i = arr.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-      };
-
-      const shuffledChars = shuffleArray(split.chars);
-      
-      gsap.from(shuffledChars, {
-        y: '110%',
-        ease: "power4.out",
-        duration: 0.8,
-        stagger: 0.025,
-        scrollTrigger: {
-          trigger: element,
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        }
-      });
-
-      const subtextEl = subtextRef.current;
-      if (subtextEl) {
-        const subtextSplit = new SplitType(subtextEl, { types: 'words' });
-        gsap.from(subtextSplit.words, {
+      if (containerRef.current) {
+        gsap.from(containerRef.current.children, {
           opacity: 0,
-          y: 15,
-          stagger: 0.06,
-          duration: 0.5,
+          y: 20,
+          duration: 0.6,
+          stagger: 0.1,
           ease: "power2.out",
           scrollTrigger: {
-            trigger: subtextEl,
-            start: "top 90%",
+            trigger: containerRef.current,
+            start: "top 85%",
             toggleActions: "play none none reverse",
           }
         });
@@ -81,42 +47,48 @@ export default function Newsletter() {
   }
 
   return (
-    <section className="container" style={styles.section}>
-      <p style={styles.eyebrow}>Join the family</p>
-      <h2 ref={headlineRef} style={styles.headline}>Get 10% off your first visit</h2>
-      <p ref={subtextRef} style={styles.subtext}>
-        Subscribe to be the first to know about new dishes, secret menus, and exclusive events.
-      </p>
-
-      {status === 'done' ? (
-        <p style={styles.successMsg}>
-          You're in. Show this code <strong>WELCOME10</strong> on your next visit.
+    <div style={{ padding: 'clamp(40px, 8vw, 100px) 20px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+      <section ref={containerRef} style={styles.section}>
+        <p style={styles.eyebrow}>Join the family</p>
+        <h2 style={styles.headline}>Get 10% off your first visit</h2>
+        <p style={styles.subtext}>
+          Subscribe to be the first to know about new dishes, secret menus, and exclusive events.
         </p>
-      ) : (
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <input
-            type="email"
-            required
-            placeholder="your@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={styles.input}
-          />
-          <button className="btn btn-primary" disabled={status === 'loading'} style={styles.submitBtn}>
-            {status === 'loading' ? 'Sending...' : 'Get my discount'}
-          </button>
-        </form>
-      )}
-      {status === 'error' && <p style={styles.errorMsg}>{error}</p>}
-    </section>
+
+        {status === 'done' ? (
+          <p style={styles.successMsg}>
+            You're in. Show this code <strong>WELCOME10</strong> on your next visit.
+          </p>
+        ) : (
+          <form onSubmit={handleSubmit} style={styles.form}>
+            <input
+              type="email"
+              required
+              placeholder="your@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={styles.input}
+            />
+            <button className="btn btn-primary" disabled={status === 'loading'} style={styles.submitBtn}>
+              {status === 'loading' ? 'Sending...' : 'Get my discount'}
+            </button>
+          </form>
+        )}
+        {status === 'error' && <p style={styles.errorMsg}>{error}</p>}
+      </section>
+    </div>
   );
 }
 
 const styles = {
   section: {
-    padding: 'clamp(64px, 12vw, 140px) 20px',
+    background: '#FFFFFF',
+    borderRadius: '24px',
+    padding: 'clamp(32px, 6vw, 56px) clamp(20px, 4vw, 40px)',
     textAlign: 'center',
     maxWidth: '560px',
+    width: '100%',
+    boxShadow: 'none',
   },
   eyebrow: {
     fontSize: '14px',
@@ -132,7 +104,7 @@ const styles = {
   },
   subtext: {
     fontSize: '15px',
-    color: 'rgba(96, 3, 4, 0.65)',
+    color: 'rgba(96, 3, 4, 0.85)',
     lineHeight: 1.6,
     marginBottom: '28px',
     fontFamily: 'var(--font)',
