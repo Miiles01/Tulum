@@ -60,8 +60,8 @@ function TransitionBridge() {
   });
 
   const bgColor = useTransform(scrollYProgress, [0, 1], ['#600304', '#FBEDE0']);
-  const textColor = useTransform(scrollYProgress, [0, 1], ['#FBEDE0', '#600304']);
-  const textSoftColor = useTransform(scrollYProgress, [0, 1], ['rgba(251, 237, 224, 0.65)', 'rgba(96, 3, 4, 0.65)']);
+  const textColor = useTransform(scrollYProgress, [0, 0.49, 0.51, 1], ['#FBEDE0', '#FBEDE0', '#600304', '#600304']);
+  const textSoftColor = useTransform(scrollYProgress, [0, 0.49, 0.51, 1], ['rgba(251, 237, 224, 0.65)', 'rgba(251, 237, 224, 0.65)', 'rgba(96, 3, 4, 0.65)', 'rgba(96, 3, 4, 0.65)']);
 
   return (
     <motion.section
