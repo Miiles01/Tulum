@@ -301,7 +301,7 @@ export default function Home() {
           </p>
           <div className="menu-images-grid">
             <div className="menu-image-left">
-              <img src="/brand/post-247.png" alt="Tulum vibes" style={{ width: '100%', height: 'auto', borderRadius: '16px', objectFit: 'cover' }} />
+              <img src="/brand/post-247-v2.png" alt="Tulum vibes" style={{ width: '100%', height: 'auto', borderRadius: '16px', objectFit: 'cover' }} />
             </div>
             <div className="menu-image-right">
               <img src="/brand/post-248.png" alt="Tulum dish" style={{ width: '100%', height: 'auto', borderRadius: '16px', objectFit: 'cover' }} />
