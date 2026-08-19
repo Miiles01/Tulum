@@ -278,10 +278,24 @@ export default function Home() {
             { quote: "Amazing atmosphere and the Guacamole is to die for. You can really taste the tradition in every bite.", author: "James T." },
             { quote: "A true gem! The Margarita Tradicional paired with their Ceviche makes for a perfect evening.", author: "Elena R." },
           ].map((t, i) => (
-            <div key={i} style={{ background: '#FFFFFF', borderRadius: '24px', padding: '32px', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'flex', gap: '4px', color: 'var(--rosa-neon)', fontSize: '18px' }}>
-                {'★★★★★'}
+            <div key={i} style={{ background: '#FFFFFF', borderRadius: '24px', padding: '32px', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <p style={{ fontSize: '16px', color: 'rgba(96,3,4,0.85)', fontFamily: 'var(--font)', lineHeight: 1.6, flexGrow: 1, margin: 0 }}>
+                "{t.quote}"
+              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <img src={`/avatares/${i + 1}.jpg`} alt={t.author} style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover' }} />
+                <div>
+                  <p style={{ fontSize: '15px', color: '#600304', fontFamily: 'var(--font)', fontWeight: 700, margin: 0 }}>
+                    {t.author}
+                  </p>
+                  <div style={{ color: 'var(--rosa-neon)', fontSize: '14px', marginTop: '4px', letterSpacing: '2px' }}>
+                    ★★★★★
+                  </div>
+                </div>
               </div>
+            </div>
+          ))}
+        </div>
               <p style={{ fontSize: '16px', color: 'rgba(96,3,4,0.85)', fontFamily: 'var(--font)', lineHeight: 1.6, flexGrow: 1, margin: 0 }}>
                 "{t.quote}"
               </p>
