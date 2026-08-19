@@ -57,7 +57,7 @@ export default function Header() {
   const backdropFilter = "none";
   const textColor = "#600304";
   const logoFilter = "none";
-  const logoOpacity = 1;
+  const logoOpacity = useTransform(scrollY, [0, 100], [0, 1]);
 
   return (
     <>
