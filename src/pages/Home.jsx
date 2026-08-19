@@ -412,8 +412,8 @@ export default function Home() {
                     {featured.map((p) => (
                         <div className="card mwg087-card" key={p.id}>
                             <div className="card-content">
-                                <div className="top" style={{ width: '100%', height: '350px', borderRadius: '16px', overflow: 'hidden' }}>
-                                    <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <div className="top" style={{ width: '100%', height: '350px' }}>
+                                    <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                                 </div>
                                 <div className="bottom" style={{ marginTop: '24px', textAlign: 'left' }}>
                                     <h3 style={{ fontSize: '24px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
