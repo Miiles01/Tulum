@@ -351,6 +351,12 @@ export default function Home() {
     if (activeBgRef.current) {
       activeBgRef.current.destroy?.();
     }
+
+    // Aplicar el color INICIAL inmediatamente (por si el usuario recarga la página ya scrolleado)
+    if (wrapperRef.current) {
+      wrapperRef.current.style.backgroundColor = motionValue.get();
+    }
+
     // Suscribirse al motionValue y escribir al DOM sin re-renders
     const unsubscribe = motionValue.on('change', (val) => {
       if (wrapperRef.current) {
