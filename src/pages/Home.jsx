@@ -239,7 +239,7 @@ export default function Home() {
         </div>
 
         <div style={{ textAlign: 'center', paddingBottom: 'clamp(48px, 8vw, 96px)', marginTop: '60px' }}>
-          <p ref={productsSubtextRef} style={{ fontSize: '15px', color: 'rgba(96,3,4,0.65)', fontFamily: 'var(--font)', maxWidth: '380px', margin: '0 auto 30px', lineHeight: 1.5 }}>
+          <p ref={productsSubtextRef} style={{ fontSize: '15px', color: 'rgba(96,3,4,0.85)', fontWeight: 600, fontFamily: 'var(--font)', maxWidth: '380px', margin: '0 auto 30px', lineHeight: 1.5 }}>
             There are more flavors waiting for you. Explore our full menu and find your next favorite dish.
           </p>
           <Link to="/productos" className="btn btn-cream">View full menu</Link>
