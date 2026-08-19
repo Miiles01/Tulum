@@ -586,7 +586,8 @@ input, select, textarea {
     white-space: nowrap;
     gap: 24px;
     will-change: transform;
-    padding: 0 calc(100vw + 1px);
+    padding-left: max(20px, calc((100vw - 1200px) / 2));
+    padding-right: calc(100vw + 1px);
     align-items: center;
 }
 .mwg_effect087 .card {
