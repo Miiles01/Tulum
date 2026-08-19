@@ -59,6 +59,20 @@ export default function Header() {
   const logoFilter = "none";
   const logoOpacity = useTransform(scrollY, [0, 100], [0, 1]);
 
+  const handleScroll = (selector) => {
+    setMenuOpen(false);
+    if (!isHome) {
+      navigate('/');
+      setTimeout(() => {
+        const el = document.querySelector(selector);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      const el = document.querySelector(selector);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <>
       <motion.header
