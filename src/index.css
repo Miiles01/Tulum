@@ -1047,3 +1047,30 @@ input, select, textarea {
     display: none !important;
   }
 }
+
+/* ------------------------
+   MENU IMAGES GRID
+------------------------- */
+.menu-images-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  max-width: 1000px;
+  margin: 40px auto 0;
+  padding: 0 20px;
+}
+.menu-image-left {
+  display: none;
+}
+.menu-image-right {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .menu-images-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .menu-image-left {
+    display: block;
+  }
+}

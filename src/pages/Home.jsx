@@ -299,6 +299,14 @@ export default function Home() {
           <p ref={productsSubtextRef} style={{ fontSize: '15px', color: 'rgba(96,3,4,0.85)', fontWeight: 600, fontFamily: 'var(--font)', maxWidth: '380px', margin: '0 auto 30px', lineHeight: 1.5 }}>
             There are more flavors waiting for you. Explore our full menu and find your next favorite dish.
           </p>
+          <div className="menu-images-grid">
+            <div className="menu-image-left">
+              <img src="/brand/post-247.png" alt="Tulum vibes" style={{ width: '100%', height: 'auto', borderRadius: '16px', objectFit: 'cover' }} />
+            </div>
+            <div className="menu-image-right">
+              <img src="/brand/post-248.png" alt="Tulum dish" style={{ width: '100%', height: 'auto', borderRadius: '16px', objectFit: 'cover' }} />
+            </div>
+          </div>
         </div>
       </section>
 
