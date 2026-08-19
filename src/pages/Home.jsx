@@ -144,11 +144,12 @@ export default function Home() {
       // ── Títulos SplitType ──
       const animateTitle = (el) => {
         if (!el) return;
+        // Fix for mobile: avoid inline-flex and overflow hidden which breaks wrapping and cursive fonts
         const split = new SplitType(el, { types: 'words, chars' });
-        gsap.set(split.words, { overflow: 'hidden', display: 'inline-flex', flexWrap: 'nowrap' });
-        gsap.set(split.chars, { display: 'inline-block' });
+        gsap.set(split.words, { display: 'inline-block', overflow: 'visible' });
+        gsap.set(split.chars, { display: 'inline-block', overflow: 'visible' });
         const shuffled = [...split.chars].sort(() => Math.random() - 0.5);
-        gsap.from(shuffled, { y: '110%', ease: 'power4.out', duration: 0.8, stagger: 0.025, scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' } });
+        gsap.from(shuffled, { opacity: 0, y: 20, ease: 'power3.out', duration: 0.6, stagger: 0.02, scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' } });
       };
 
       const animateSubtext = (el) => {
@@ -171,8 +172,8 @@ export default function Home() {
 
       {/* ── HERO MWG 050 ── */}
       <section ref={mwgHeroRootRef} className="mwg_effect050" style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
-        <div ref={mwgHeroPinHeightRef} className="pin-height" style={{ height: '400vh' }}>
-          <div ref={mwgHeroContainerRef} className="mwg-container" style={{ position: 'relative', height: '100vh', width: '100%', display: 'block', zIndex: 1 }}>
+        <div ref={mwgHeroPinHeightRef} className="pin-height" style={{ height: '400dvh' }}>
+          <div ref={mwgHeroContainerRef} className="mwg-container" style={{ position: 'relative', height: '100dvh', width: '100%', display: 'block', zIndex: 1 }}>
             <picture className="real-image"><source media="(max-width: 768px)" srcSet="/covers/mobile/1.webp" /><img src="/covers/desktop/1.webp" alt="Tulum 1" /></picture>
             <picture className="real-image"><source media="(max-width: 768px)" srcSet="/covers/mobile/2.webp" /><img src="/covers/desktop/2.webp" alt="Tulum 2" /></picture>
             <picture className="real-image"><source media="(max-width: 768px)" srcSet="/covers/mobile/3.webp" /><img src="/covers/desktop/3.webp" alt="Tulum 3" /></picture>

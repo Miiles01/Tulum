@@ -127,7 +127,7 @@ input, select, textarea {
 
 /* ------------------- Contenedores Básicos ------------------- */
 .page-container {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
@@ -310,7 +310,7 @@ input, select, textarea {
 /* Hero de inicio: fondo Obsidiana + degradado editorial, sin fotografía (aún no hay) */
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 100dvh;
   min-height: 100svh;
   display: flex;
   align-items: flex-end;
@@ -360,7 +360,7 @@ input, select, textarea {
 }
 
 @media (min-width: 768px) {
-  .hero { min-height: 100vh; }
+  .hero { min-height: 100dvh; }
   .hero-cta { margin-bottom: 64px; }
 
   .hero-content-top {
@@ -530,7 +530,7 @@ input, select, textarea {
 .mwg_effect050 .mwg-container {
   position: relative;
   z-index: 1;
-  height: 100vh;
+  height: 100dvh;
   display: block;
 }
 .mwg_effect050 .real-image {
@@ -577,7 +577,7 @@ input, select, textarea {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 100vh;
+    height: 100dvh;
     width: 100%;
 }
 .mwg_effect087 .cards {
@@ -925,7 +925,7 @@ input, select, textarea {
 }
 .mwg_effect073 .section-anim {
     position: relative;
-    height: 100vh;
+    height: 100dvh;
     width: 100vw;
     display: flex;
     align-items: center;
