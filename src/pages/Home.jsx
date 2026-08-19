@@ -1,5 +1,4 @@
 import { useRef, useState, useLayoutEffect, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -108,33 +107,6 @@ function TransitionBridge() {
 
 // ─── Home ─────────────────────────────────────────────────────────────────────
 export default function Home() {
-  const [featured, setFeatured] = useState([]);
-
-  // Refs GSAP MWG 087 (horizontal scroll)
-  const gsapRootRef      = useRef(null);
-  const pinHeightRef     = useRef(null);
-  const gsapContainerRef = useRef(null);
-
-  // Refs GSAP MWG 050 (hero)
-  const mwgHeroRootRef      = useRef(null);
-  const mwgHeroPinHeightRef = useRef(null);
-  const mwgHeroContainerRef = useRef(null);
-
-  // Refs títulos animados
-  const historyTitleRef    = useRef(null);
-  const productsTitleRef   = useRef(null);
-  const productsSubtextRef = useRef(null);
-
-  useEffect(() => {
-    setFeatured([
-      { id: 1, title: 'Tacos al Pastor',      description: 'Traditional pork tacos with pineapple, onion, and cilantro on handmade corn tortillas.',                  images: '["tulum/24.webp"]' },
-      { id: 2, title: 'Guacamole Clásico',    description: 'Freshly mashed avocados, tomatoes, onions, cilantro, and lime juice. Served with warm tortilla chips.',   images: '["tulum/25.webp"]' },
-      { id: 3, title: 'Ceviche Tulum',        description: 'Fresh fish marinated in lime juice with cucumber, red onion, jalapeño, and avocado.',                      images: '["tulum/26.webp"]' },
-      { id: 4, title: 'Enchiladas Verdes',    description: 'Three chicken enchiladas topped with our signature green salsa, crema, and queso fresco.',                 images: '["tulum/27.webp"]' },
-      { id: 5, title: 'Margarita Tradicional',description: 'Classic lime margarita with a salt rim, made with premium tequila and fresh juices.',                      images: '["tulum/28.webp"]' },
-      { id: 6, title: 'Churros con Chocolate',description: 'Crispy fried dough tossed in cinnamon sugar, served with a rich chocolate dipping sauce.',                 images: '["tulum/29.webp"]' },
-    ]);
-  }, []);
 
   useLayoutEffect(() => {
     if (featured.length === 0) return;
@@ -256,24 +228,6 @@ export default function Home() {
       };
 
       animateTitle(historyTitleRef.current);
-      animateSubtext(productsSubtextRef.current);
-
-      // Título de productos: fade-up simple (sin SplitType para evitar bug de apilamiento)
-      if (productsTitleRef.current) {
-        gsap.from(productsTitleRef.current, {
-          opacity: 0,
-          y: 30,
-          duration: 0.8,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: productsTitleRef.current,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
-        });
-      }
-
-
     });
 
     return () => ctx.revert();
@@ -309,69 +263,6 @@ export default function Home() {
       {/* ── TRANSICIÓN VINO → CREMA (su propio fondo animado) ── */}
       <TransitionBridge />
 
-      {/* ── PRODUCTOS DESTACADOS — fondo Crema fijo ── */}
-      <section
-        className="productos-destacados-section"
-        style={{ background: '#FBEDE0', paddingTop: 'clamp(56px, 10vw, 120px)' }}
-      >
-        <div className="container" style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <p style={{ fontSize: '14px', marginBottom: '8px', color: 'rgba(96,3,4,0.5)', fontFamily: 'var(--font)' }}>Our favorites for you</p>
-          <h2 ref={productsTitleRef} style={{ color: '#600304', fontSize: 'clamp(32px, 6vw, 72px)' }}>
-            Dishes that tell a story
-          </h2>
-        </div>
-
-        {/* Mobile: carousel horizontal nativo */}
-        <div className="mobile-only-carousel">
-          <div className="carousel-track" style={{ padding: '0 20px 16px' }}>
-            {featured.map((p) => (
-              <div key={p.id} className="carousel-item" style={{ minWidth: '280px', maxWidth: '320px', scrollSnapAlign: 'start' }}>
-                <div style={{ padding: '16px', display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ width: '100%', height: '280px' }}>
-                    <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                  </div>
-                  <div style={{ marginTop: '20px', textAlign: 'left' }}>
-                    <h3 style={{ fontSize: '22px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
-                    <p style={{ fontSize: '14px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-            <div style={{ width: '4px', flexShrink: 0 }} />
-          </div>
-        </div>
-
-        {/* Desktop: GSAP MWG 087 horizontal pinned */}
-        <div className="desktop-only-gsap mwg_effect087" ref={gsapRootRef}>
-          <div className="container" ref={pinHeightRef}>
-            <div className="cards" ref={gsapContainerRef}>
-              {featured.map((p) => (
-                <div className="card mwg087-card" key={p.id}>
-                  <div className="card-content">
-                    <div className="top" style={{ width: '100%', height: '350px' }}>
-                      <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                    </div>
-                    <div className="bottom" style={{ marginTop: '24px', textAlign: 'left' }}>
-                      <h3 style={{ fontSize: '24px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
-                      <p style={{ fontSize: '15px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div style={{ textAlign: 'center', paddingBottom: 'clamp(48px, 8vw, 96px)', marginTop: '60px' }}>
-          <p ref={productsSubtextRef} style={{
-            fontSize: '15px', color: 'rgba(96,3,4,0.65)', fontFamily: 'var(--font)',
-            maxWidth: '380px', margin: '0 auto 30px', lineHeight: 1.5,
-          }}>
-            There are more flavors waiting for you. Explore our full menu and find your next favorite dish.
-          </p>
-          <Link to="/productos" className="btn btn-cream">View full menu</Link>
-        </div>
-      </section>
 
       {/* ── NEWSLETTER — fondo Crema fijo ── */}
       <div style={{ background: '#FBEDE0', display: 'flex', justifyContent: 'center' }}>
