@@ -51,32 +51,25 @@ const FEATURES = [
 function TransitionBridge({ onColorChange }) {
   const ref = useRef(null);
 
-  // scrollYProgress = 0 cuando el top de la sección llega al 60% del viewport,
-  //                 = 1 cuando el bottom sale por arriba — igual que GSAP:
-  //                   start: "top 60%", end: "bottom top"
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start 60%', 'end start'],
   });
 
+  // Solo animamos el fondo del wrapper padre — igual que Lore District
   const bgColor = useTransform(scrollYProgress, [0, 1], ['#600304', '#FBEDE0']);
-  // Hacemos que el texto "snap" de color para evitar camuflaje al 50%
-  const textColor = useTransform(scrollYProgress, [0, 0.49, 0.51, 1], ['#FBEDE0', '#FBEDE0', '#600304', '#600304']);
-  const textSoftColor = useTransform(scrollYProgress, [0, 0.49, 0.51, 1], ['rgba(251, 237, 224, 0.65)', 'rgba(251, 237, 224, 0.65)', 'rgba(96, 3, 4, 0.65)', 'rgba(96, 3, 4, 0.65)']);
 
-  // Publicar el motionValue al padre para que lo aplique al wrapper
   useEffect(() => {
     onColorChange(bgColor);
   }, [bgColor, onColorChange]);
 
   return (
-    <motion.section
+    <section
       ref={ref}
       style={{
         padding: 'clamp(48px, 8vw, 96px) 20px',
         position: 'relative',
         zIndex: 1,
-        // No le ponemos background aquí, hereda del wrapper
       }}
     >
       <div
@@ -92,7 +85,7 @@ function TransitionBridge({ onColorChange }) {
             key={f.titulo}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '0px' }} // Cambiado a 0px para que dispare antes
+            viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.6, delay: i * 0.15, ease: 'easeOut' }}
             style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
           >
@@ -103,19 +96,19 @@ function TransitionBridge({ onColorChange }) {
               background: 'rgba(237, 74, 155, 0.12)',
               borderRadius: '10px',
             }}>{f.icon}</div>
-            <motion.h3 style={{
-              fontSize: '17px', color: textColor,
+            <h3 style={{
+              fontSize: '17px', color: '#FBEDE0',
               fontFamily: 'var(--font)', fontWeight: 600,
               margin: 0, textTransform: 'none',
-            }}>{f.titulo}</motion.h3>
-            <motion.p style={{
-              fontSize: '14px', color: textSoftColor,
+            }}>{f.titulo}</h3>
+            <p style={{
+              fontSize: '14px', color: 'rgba(251, 237, 224, 0.65)',
               lineHeight: 1.65, fontFamily: 'var(--font)', margin: 0,
-            }}>{f.texto}</motion.p>
+            }}>{f.texto}</p>
           </motion.div>
         ))}
       </div>
-    </motion.section>
+    </section>
   );
 }
 
