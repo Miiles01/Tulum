@@ -1,4 +1,4 @@
-import { useRef, useState, useLayoutEffect, useEffect } from 'react';
+import { useRef, useLayoutEffect, useEffect } from 'react';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -37,9 +37,7 @@ const FEATURES = [
   },
 ];
 
-// ─── Sección puente: dark (Vino) → light (Crema) ─────────────────────────────
-// Tiene su propio fondo animado. El texto arranca en Crema y hace snap a Vino
-// cuando el fondo ya es suficientemente claro — siempre contrasta.
+// ─── Sección puente: Vino → Crema ─────────────────────────────────────────────
 function TransitionBridge() {
   const ref = useRef(null);
 
@@ -105,85 +103,25 @@ function TransitionBridge() {
   );
 }
 
-// ─── Home ─────────────────────────────────────────────────────────────────────
+// ─── Home ──────────────────────────────────────────────────────────────────────
 export default function Home() {
+  const mwgHeroRootRef      = useRef(null);
+  const mwgHeroPinHeightRef = useRef(null);
+  const mwgHeroContainerRef = useRef(null);
+  const historyTitleRef     = useRef(null);
 
   useLayoutEffect(() => {
-    if (featured.length === 0) return;
-
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
-
-      // ── MWG 087: horizontal scroll (desktop) ──
-      mm.add('(min-width: 768px)', () => {
-        const root           = gsapRootRef.current;
-        const container      = pinHeightRef.current;
-        const cardsContainer = gsapContainerRef.current;
-        const cards          = gsap.utils.toArray('.mwg087-card', root);
-
-        if (!root || !container || !cardsContainer || cards.length === 0) return;
-
-        ScrollTrigger.getAll().forEach(t => {
-          if (t.vars.trigger === container || t.vars.trigger === root) t.kill();
-        });
-
-        const distance   = cardsContainer.scrollWidth - window.innerWidth;
-        const scrollTween = gsap.to(cardsContainer, {
-          x: -distance,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: container,
-            pin: true,
-            scrub: true,
-            start: 'top top',
-            end: '+=' + distance,
-          },
-        });
-
-        let transformBetweenTwoTicks = 0;
-        let oldTransform = 0;
-        const tick = () => {
-          const cur = gsap.getProperty(cardsContainer, 'x');
-          transformBetweenTwoTicks = cur - oldTransform;
-          oldTransform = cur;
-        };
-        const transformCard = (el) => {
-          gsap.fromTo(el, { xPercent: -transformBetweenTwoTicks * 3 }, { xPercent: 0, ease: 'power3.out', duration: 0.7 });
-        };
-
-        cards.forEach(card => {
-          ScrollTrigger.create({
-            trigger: card,
-            containerAnimation: scrollTween,
-            start: 'left 100%',
-            end: 'right 0%',
-            onEnter:     () => transformCard(card.children[0]),
-            onEnterBack: () => transformCard(card.children[0]),
-          });
-        });
-
-        ScrollTrigger.create({
-          trigger: root,
-          onEnter:     () => gsap.ticker.add(tick),
-          onLeave:     () => gsap.ticker.remove(tick),
-          onEnterBack: () => gsap.ticker.add(tick),
-          onLeaveBack: () => gsap.ticker.remove(tick),
-        });
-      });
 
       // ── MWG 050: Hero ──
       mm.add('(min-width: 0px)', () => {
         const heroRoot      = mwgHeroRootRef.current;
         const heroPinHeight = mwgHeroPinHeightRef.current;
         const heroContainer = mwgHeroContainerRef.current;
-
         if (!heroRoot || !heroPinHeight || !heroContainer) return;
 
         const realImages = gsap.utils.toArray('.real-image', heroContainer);
-
-        ScrollTrigger.getAll().forEach(t => {
-          if (t.vars.trigger === heroRoot || t.vars.trigger === heroPinHeight) t.kill();
-        });
 
         realImages.forEach((img, i) => gsap.set(img, { zIndex: i + 1, scale: 0 }));
         gsap.set(realImages[0], { scale: 1.005 });
@@ -200,13 +138,12 @@ export default function Home() {
         }).to(realImages.slice(1), { scale: 1.005, ease: 'expo.inOut', duration: 8, stagger: 1.2 });
       });
 
-      // ── Títulos animados con SplitType ──
+      // ── Título historia con SplitType ──
       const animateTitle = (el) => {
         if (!el) return;
         const split = new SplitType(el, { types: 'words, chars' });
         gsap.set(split.words, { overflow: 'hidden', display: 'inline-flex', flexWrap: 'nowrap' });
         gsap.set(split.chars, { display: 'inline-block' });
-
         const shuffled = [...split.chars].sort(() => Math.random() - 0.5);
         gsap.from(shuffled, {
           y: '110%',
@@ -217,21 +154,11 @@ export default function Home() {
         });
       };
 
-      const animateSubtext = (el) => {
-        if (!el) return;
-        const split = new SplitType(el, { types: 'words' });
-        gsap.set(split.words, { display: 'inline-block', marginRight: '0.25em' });
-        gsap.from(split.words, {
-          opacity: 0, y: 15, stagger: 0.06, duration: 0.5, ease: 'power2.out',
-          scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none reverse' },
-        });
-      };
-
       animateTitle(historyTitleRef.current);
     });
 
     return () => ctx.revert();
-  }, [featured]);
+  }, []);
 
   return (
     <div style={{ background: '#600304' }}>
@@ -260,11 +187,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── TRANSICIÓN VINO → CREMA (su propio fondo animado) ── */}
+      {/* ── TRANSICIÓN VINO → CREMA ── */}
       <TransitionBridge />
 
-
-      {/* ── NEWSLETTER — fondo Crema fijo ── */}
+      {/* ── NEWSLETTER ── */}
       <div style={{ background: '#FBEDE0', display: 'flex', justifyContent: 'center' }}>
         <Newsletter />
       </div>
