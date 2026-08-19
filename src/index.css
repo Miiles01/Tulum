@@ -1004,3 +1004,45 @@ input, select, textarea {
 
 /* SplitType fallbacks */
 .word, .char { display: inline-block; }
+
+/* ------------------------
+   TESTIMONIALS CAROUSEL
+------------------------- */
+.testimonials-grid {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0 20px 80px;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.testimonials-grid::-webkit-scrollbar {
+  display: none;
+}
+.testimonials-grid > div {
+  min-width: 280px;
+  width: 85vw;
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}
+
+@media (min-width: 768px) {
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    overflow-x: visible;
+  }
+  .testimonials-grid > div {
+    min-width: auto;
+    width: auto;
+    flex: auto;
+  }
+}
+@media (min-width: 768px) {
+  .mobile-only-spacer {
+    display: none !important;
+  }
+}
