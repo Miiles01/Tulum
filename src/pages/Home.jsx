@@ -415,8 +415,16 @@ export default function Home() {
         <div className="mobile-only-carousel">
           <div className="carousel-track" style={{ padding: '0 20px 16px', margin: '0' }}>
             {featured.map((p) => (
-              <div key={p.id} className="carousel-item" style={{ minWidth: '260px' }}>
-                <ProductCard product={p} />
+              <div key={p.id} className="carousel-item" style={{ minWidth: '280px', maxWidth: '320px', scrollSnapAlign: 'start' }}>
+                <div className="card-content" style={{ padding: '16px', display: 'flex', flexDirection: 'column' }}>
+                    <div className="top" style={{ width: '100%', height: '280px' }}>
+                        <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    </div>
+                    <div className="bottom" style={{ marginTop: '20px', textAlign: 'left' }}>
+                        <h3 style={{ fontSize: '22px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
+                        <p style={{ fontSize: '14px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
+                    </div>
+                </div>
               </div>
             ))}
             <div style={{ width: '4px', flexShrink: 0 }} />
