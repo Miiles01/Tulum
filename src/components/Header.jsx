@@ -53,9 +53,9 @@ export default function Header() {
   const animatedRadius = useSpring(borderRadiusRange, springConfig);
   const animatedTop = useSpring(topRange, springConfig);
 
-  const backgroundColor = useTransform(bgOpacityBase, (o) => `rgba(28, 28, 31, ${isHome ? o : 1})`);
+  const backgroundColor = useTransform(bgOpacityBase, (o) => `rgba(251, 237, 224, ${isHome ? o : 1})`);
   const backdropFilter = "none";
-  const textColor = "#f2f2f2";
+  const textColor = "#600304";
   const logoFilter = "none";
   const logoOpacity = 1;
 
