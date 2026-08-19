@@ -84,7 +84,8 @@ export default function Home() {
 
   useEffect(() => {
     setFeatured([
-      { id: 1, title: 'Tacos al Pastor',       description: 'Traditional pork tacos with pineapple, onion, and cilantro on handmade corn tortillas.',                 images: '["tulum/24.webp"]' },
+      { id: 'title', isTitleCard: true, title: 'Dishes that tell a story', description: 'Every recipe holds a piece of our heritage. Sourced daily and prepared with passion, these are the flavors that define Tulum.' },
+      { id: 1, title: 'Tacos al Pastor',       description: 'Traditional pork tacos with pineapple, onion, and cilantro on handmade corn tortillas.',                 images: '["tulum/24.webp"]' },       description: 'Traditional pork tacos with pineapple, onion, and cilantro on handmade corn tortillas.',                 images: '["tulum/24.webp"]' },
       { id: 2, title: 'Guacamole Clásico',     description: 'Freshly mashed avocados, tomatoes, onions, cilantro, and lime juice. Served with warm tortilla chips.',  images: '["tulum/25.webp"]' },
       { id: 3, title: 'Ceviche Tulum',         description: 'Fresh fish marinated in lime juice with cucumber, red onion, jalapeño, and avocado.',                     images: '["tulum/26.webp"]' },
       { id: 4, title: 'Enchiladas Verdes',     description: 'Three chicken enchiladas topped with our signature green salsa, crema, and queso fresco.',                images: '["tulum/27.webp"]' },
@@ -202,15 +203,23 @@ export default function Home() {
           <div className="carousel-track" style={{ padding: '0 20px 16px' }}>
             {featured.map((p) => (
               <div key={p.id} className="carousel-item" style={{ minWidth: '280px', maxWidth: '320px', scrollSnapAlign: 'start' }}>
-                <div style={{ padding: '16px', display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ width: '100%', height: '280px' }}>
-                    <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                {p.isTitleCard ? (
+                  <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center', textAlign: 'left' }}>
+                    <p style={{ fontSize: '14px', marginBottom: '8px', color: 'rgba(96,3,4,0.5)', fontFamily: 'var(--font)' }}>Our favorites for you</p>
+                    <h2 style={{ fontSize: 'clamp(36px, 10vw, 48px)', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '16px', fontWeight: 700, lineHeight: 1.1 }}>{p.title}</h2>
+                    <p style={{ fontSize: '15px', color: '#600304', opacity: 0.8, lineHeight: 1.5 }}>{p.description}</p>
                   </div>
-                  <div style={{ marginTop: '20px', textAlign: 'left' }}>
-                    <h3 style={{ fontSize: '22px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
-                    <p style={{ fontSize: '14px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
+                ) : (
+                  <div style={{ padding: '16px', display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ width: '100%', height: '280px' }}>
+                      <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    </div>
+                    <div style={{ marginTop: '20px', textAlign: 'left' }}>
+                      <h3 style={{ fontSize: '22px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
+                      <p style={{ fontSize: '14px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             ))}
             <div style={{ width: '4px', flexShrink: 0 }} />
@@ -223,14 +232,24 @@ export default function Home() {
             <div className="cards" ref={gsapContainerRef}>
               {featured.map((p) => (
                 <div className="card mwg087-card" key={p.id}>
-                  <div className="card-content">
-                    <div className="top" style={{ width: '100%', height: '350px' }}>
-                      <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                    </div>
-                    <div className="bottom" style={{ marginTop: '24px', textAlign: 'left' }}>
-                      <h3 style={{ fontSize: '24px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
-                      <p style={{ fontSize: '15px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
-                    </div>
+                  <div className="card-content" style={p.isTitleCard ? { display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', padding: '0 20px', textAlign: 'left' } : {}}>
+                    {p.isTitleCard ? (
+                      <>
+                        <p style={{ fontSize: '16px', marginBottom: '12px', color: 'rgba(96,3,4,0.5)', fontFamily: 'var(--font)' }}>Our favorites for you</p>
+                        <h2 style={{ fontSize: 'clamp(48px, 6vw, 72px)', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '24px', fontWeight: 700, lineHeight: 1.1 }}>{p.title}</h2>
+                        <p style={{ fontSize: '18px', color: '#600304', opacity: 0.8, lineHeight: 1.5, maxWidth: '400px' }}>{p.description}</p>
+                      </>
+                    ) : (
+                      <>
+                        <div className="top" style={{ width: '100%', height: '350px' }}>
+                          <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                        </div>
+                        <div className="bottom" style={{ marginTop: '24px', textAlign: 'left' }}>
+                          <h3 style={{ fontSize: '24px', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '8px', letterSpacing: '-0.02em', fontWeight: 700 }}>{p.title}</h3>
+                          <p style={{ fontSize: '15px', color: '#600304', opacity: 0.8, lineHeight: 1.4, margin: 0 }}>{p.description}</p>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
