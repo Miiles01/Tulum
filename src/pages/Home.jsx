@@ -101,9 +101,9 @@ export default function Home() {
       { id: 'title', isTitleCard: true, title: 'Dishes that tell a story', description: 'Every recipe holds a piece of our heritage. Sourced daily and prepared with passion, these are the flavors that define Tulum.' },
       { id: 1, title: 'Fajitas',       description: 'Traditional pork tacos with pineapple, onion, and cilantro on handmade corn tortillas.',                 images: '["tulum/24.webp"]' },
       { id: 2, title: 'Burrito',     description: 'Freshly mashed avocados, tomatoes, onions, cilantro, and lime juice. Served with warm tortilla chips.',  images: '["tulum/25.webp"]' },
-      { id: 3, title: 'Ceviche Tulum',         description: 'Fresh fish marinated in lime juice with cucumber, red onion, jalapeño, and avocado.',                     images: '["tulum/26.webp"]' },
+      { id: 3, title: 'Pizza Birria',         description: 'Fresh fish marinated in lime juice with cucumber, red onion, jalapeño, and avocado.',                     images: '["tulum/26.webp"]' },
       { id: 4, title: 'Huevos rancheros',     description: 'Three chicken enchiladas topped with our signature green salsa, crema, and queso fresco.',                images: '["tulum/27.webp"]' },
-      { id: 5, title: 'Margarita Tradicional', description: 'Classic lime margarita with a salt rim, made with premium tequila and fresh juices.',                     images: '["tulum/28.webp"]' },
+      { id: 5, title: 'Enchiladas con huevo', description: 'Classic lime margarita with a salt rim, made with premium tequila and fresh juices.',                     images: '["tulum/28.webp"]' },
       { id: 6, title: 'Churros con Chocolate', description: 'Crispy fried dough tossed in cinnamon sugar, served with a rich chocolate dipping sauce.',                images: '["tulum/29.webp"]' },
     ]);
   }, []);
