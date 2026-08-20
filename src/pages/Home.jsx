@@ -83,6 +83,18 @@ export default function Home() {
   const gsapRootRef         = useRef(null);
   const pinHeightRef        = useRef(null);
   const gsapContainerRef    = useRef(null);
+  
+  const aboutVideoRef = useRef(null);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const toggleAboutVideo = () => {
+    if (!aboutVideoRef.current) return;
+    if (isVideoPlaying) {
+      aboutVideoRef.current.pause();
+    } else {
+      aboutVideoRef.current.play();
+    }
+    setIsVideoPlaying(!isVideoPlaying);
+  };
 
   useEffect(() => {
     setFeatured([
@@ -203,7 +215,7 @@ export default function Home() {
                 fontSize: '16px', 
                 fontWeight: 600, 
                 fontFamily: 'var(--font)', 
-                cursor: 'pointer'
+                cursor: 'pointer', maxHeight: '80vh'
               }}
             >
               Reserve your table
@@ -272,6 +284,31 @@ export default function Home() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* ── ABOUT VIDEO ── */}
+        <div style={{ maxWidth: '1000px', margin: '64px auto 0', padding: '0 20px', position: 'relative' }}>
+          <div 
+            style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', cursor: 'pointer', maxHeight: '80vh', boxShadow: '0 24px 50px rgba(96,3,4,0.15)' }}
+            onClick={toggleAboutVideo}
+          >
+            <video 
+              ref={aboutVideoRef}
+              src="/brand/about-video.mp4" 
+              playsInline 
+              loop
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+            {!isVideoPlaying && (
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.2)' }}>
+                <div style={{ width: '80px', height: '80px', background: 'rgba(251,237,224,0.95)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#600304', backdropFilter: 'blur(8px)', transition: 'transform 0.2s' }}>
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: '6px' }}>
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
