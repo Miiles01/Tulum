@@ -288,9 +288,9 @@ export default function Home() {
         </div>
 
         {/* ── ABOUT VIDEO ── */}
-        <div style={{ maxWidth: '1000px', margin: '64px auto 0', padding: '0 20px', position: 'relative' }}>
+        <div style={{ maxWidth: '420px', margin: '64px auto 0', padding: '0 20px', position: 'relative' }}>
           <div 
-            style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', cursor: 'pointer', maxHeight: '80vh', boxShadow: '0 24px 50px rgba(96,3,4,0.15)' }}
+            style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', cursor: 'pointer', aspectRatio: '9/16', boxShadow: '0 24px 50px rgba(96,3,4,0.15)', background: '#000' }}
             onClick={toggleAboutVideo}
           >
             <video 
