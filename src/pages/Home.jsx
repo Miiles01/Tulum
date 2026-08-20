@@ -148,7 +148,7 @@ export default function Home() {
         const realImages = gsap.utils.toArray('.real-image', heroContainer);
         realImages.forEach((img, i) => gsap.set(img, { zIndex: i + 1, scale: 0 }));
         gsap.set(realImages[0], { scale: 1.005 });
-        gsap.set(realImages[1], { scale: 0.25 });
+        // Removed gsap.set(realImages[1], { scale: 0.25 }) so it starts at 0 and only appears on scroll
         gsap.timeline({
           scrollTrigger: { trigger: heroPinHeight, start: 'top top', end: 'bottom bottom', pin: heroContainer, scrub: 1.5 },
         }).to(realImages.slice(1), { scale: 1.005, ease: 'expo.inOut', duration: 8, stagger: 1.2 });
