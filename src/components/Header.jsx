@@ -100,6 +100,7 @@ export default function Header() {
         transition={{ duration: 0.3 }}
       >
 
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         <button
           className="moss-burger"
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
@@ -107,7 +108,6 @@ export default function Header() {
         >
           <span></span><span></span>
         </button>
-
         {/* Logo (fade in al hacer scroll) */}
         <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ display: 'flex', alignItems: 'center', zIndex: 1 }} aria-label="Home">
           <motion.img
@@ -118,6 +118,7 @@ export default function Header() {
             transition={{ duration: 0.3 }}
           />
         </Link>
+        </div>
 
         <div className="tl-head-actions">
           <button className="tl-head-pill is-white hide-mobile" onClick={openReserve}>Reserve</button>
