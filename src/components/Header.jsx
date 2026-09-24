@@ -146,11 +146,9 @@ export default function Header() {
         <nav className="moss-panel" aria-hidden={!menuOpen}>
           <ul className="moss-links">
             <MossMenuItem to="/" onClick={() => { setMenuOpen(false); handleScroll('body'); }} label="Home" index={0} />
-            <MossMenuItem onClick={() => handleScroll('#menu')} label="Menu" index={1} />
-            <MossMenuItem to="/menu" onClick={() => setMenuOpen(false)} label="Order online" index={2} />
-            <MossMenuItem onClick={() => handleScroll('#about-us')} label="About us" index={3} />
-            <MossMenuItem onClick={() => { setMenuOpen(false); openReserve(); }} label="Reserve" index={4} />
-            <MossMenuItem to="/account" onClick={() => setMenuOpen(false)} label={customer ? 'My rewards' : 'Sign in'} index={5} />
+            <MossMenuItem to="/menu" onClick={() => setMenuOpen(false)} label="Order online" index={1} />
+            <MossMenuItem onClick={() => { setMenuOpen(false); openReserve(); }} label="Reserve" index={2} />
+            <MossMenuItem to="/account" onClick={() => setMenuOpen(false)} label={customer ? 'My rewards' : 'Sign in'} index={3} />
           </ul>
           
           <div className="moss-legal">
