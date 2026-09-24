@@ -243,7 +243,7 @@ export default function Home() {
           <div className="carousel-track" style={{ padding: '0 20px 16px' }}>
             {featured.filter(p => !p.isTitleCard).map((p) => (
               <div key={p.id} className="carousel-item" style={{ minWidth: '280px', maxWidth: '320px', scrollSnapAlign: 'start' }}>
-                <div style={{ padding: '16px', display: 'flex', flexDirection: 'column' }}>
+                <div className="dish-card" style={{ display: 'flex', flexDirection: 'column' }}>
                   <div style={{ width: '100%', height: '280px' }}>
                     <img src={`/products/${JSON.parse(p.images)[0]}`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                   </div>
@@ -264,7 +264,7 @@ export default function Home() {
             <div className="cards" ref={gsapContainerRef}>
               {featured.map((p) => (
                 <div className="card mwg087-card" key={p.id}>
-                  <div className="card-content" style={p.isTitleCard ? { display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', padding: '0 20px', textAlign: 'left' } : {}}>
+                  <div className={`card-content${p.isTitleCard ? '' : ' dish-card'}`} style={p.isTitleCard ? { display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', padding: '0 20px', textAlign: 'left' } : {}}>
                     {p.isTitleCard ? (
                       <>
                         <p style={{ fontSize: '16px', marginBottom: '12px', color: 'rgba(96,3,4,0.5)', fontFamily: 'var(--font)' }}>Our favorites for you</p>
