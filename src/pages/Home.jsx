@@ -49,14 +49,7 @@ function Hero() {
       </h1>
 
       <div className={`hx-actions ${inView ? 'is-in' : ''}`}>
-        <button type="button" className="hx-btn-secondary" onClick={openReserve}><span>Reserve a table</span></button>
-        <Link to="/menu" className="hx-btn-primary">
-          <span>View menu</span>
-          <span className="hx-btn-icon" aria-hidden="true">
-            <Icon name="arrow" size={22} />
-            <Icon name="arrow" size={22} />
-          </span>
-        </Link>
+        <button type="button" className="tl-btn tl-btn-primary hx-reserve" onClick={openReserve}>Reserve a table</button>
       </div>
     </section>
   );

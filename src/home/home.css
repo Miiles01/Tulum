@@ -88,22 +88,26 @@
 .hx-heading { font-size: var(--title); line-height: 1; font-weight: 800; letter-spacing: -0.055em; white-space: nowrap; }
 
 /* Ruleta: la línea hace de máscara y las palabras suben inclinadas, una tras otra */
-.hx-rotator { overflow: hidden; }
-.hx-rotator .hx-heading { position: absolute; transform: translateY(105%) rotate(-4deg); animation: hx-rotate var(--cycle) var(--ease-sh) infinite paused; }
+/* La máscara es más alta que la palabra (y se compensa con margen negativo) para que la
+   inclinación no corte ascendentes ni descendentes (el punto de la i, la g de night) */
+.hx-rotator { overflow: hidden; height: calc(var(--title) * 1.36); margin: calc(var(--title) * -0.18) 0; }
+.hx-rotator .hx-heading { position: absolute; padding: 0 0.08em; transform: translateY(150%) rotate(-4deg); animation: hx-rotate var(--cycle) var(--ease-sh) infinite paused; }
 .hx-rotator .hx-heading:nth-child(2) { animation-delay: calc(var(--cycle) / -2); }
 .hx-title.is-in .hx-rotator .hx-heading { animation-play-state: running; }
 @keyframes hx-rotate {
-  0%   { transform: translateY(105%) rotate(-4deg); }
+  0%   { transform: translateY(150%) rotate(-4deg); }
   10%  { transform: translateY(0) rotate(-4deg); }
   50%  { transform: translateY(0) rotate(-4deg); }
-  60%  { transform: translateY(-105%) rotate(-4deg); }
-  100% { transform: translateY(-105%) rotate(-4deg); }
+  60%  { transform: translateY(-150%) rotate(-4deg); }
+  100% { transform: translateY(-150%) rotate(-4deg); }
 }
 
 /* "Kitchen" entra letra por letra desde su máscara */
 .hx-main { margin-top: -0.04em; }
 .hx-main .hx-heading { display: inline-flex; }
-.hx-letter { display: inline-block; overflow: hidden; padding-bottom: 0.06em; margin-bottom: -0.06em; }
+/* Solo se enmascara el borde de abajo: con tracking negativo, un overflow:hidden por letra
+   recortaba los lados de las letras vecinas */
+.hx-letter { display: inline-block; clip-path: inset(-40% -40% -0.06em -40%); }
 .hx-letter > span { display: inline-block; transform: translateY(110%) rotate(6deg); transition: transform 1s var(--ease-sh); transition-delay: calc(0.15s + var(--i) * 55ms); }
 .hx-title.is-in .hx-letter > span { transform: none; }
 
@@ -117,7 +121,7 @@
 .hx-title.is-in .hx-sticker { transform: translateX(-50%) rotate(-4deg) scale(1); }
 
 /* Botones */
-.hx-actions { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 24px; opacity: 0; transform: translateY(16px); transition: opacity 0.8s ease 1s, transform 0.8s var(--ease) 1s; }
+.hx-actions { display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 24px; opacity: 0; transform: translateY(16px); transition: opacity 0.8s ease 1s, transform 0.8s var(--ease) 1s; }
 .hx-actions.is-in { opacity: 1; transform: none; }
 .hx-btn-secondary {
   position: relative; overflow: hidden; background: none; border: none; cursor: pointer; color: var(--ink);
@@ -138,9 +142,6 @@
 
 @media (max-width: 767px) {
   .hx-hero { min-height: 0; padding-top: 110px; gap: 36px; }
-  .hx-actions { flex-direction: column; align-items: stretch; }
-  .hx-btn-secondary { box-shadow: inset 0 0 0 1.5px var(--ink); }
-  .hx-btn-primary { justify-content: space-between; }
   .hx-hero { --title: 19vw; }
   .hx-main { margin-bottom: 0.9em; }
   .hx-sticker { bottom: auto; top: 88%; font-size: 17px; }
@@ -319,3 +320,6 @@
 .hh-plate.is-cutout img { transform: scale(1.35); filter: drop-shadow(0 10px 14px rgba(96, 3, 4, 0.25)); }
 .hh-plate.is-cutout.is-in img { transform: scale(1.35); }
 .hh-plate.is-cutout::after { display: none; }
+
+/* Botón de reservar: el pill del resto del sitio, un poco más grande en el hero */
+.hx-reserve { padding: 16px 32px; font-size: 16px; }
