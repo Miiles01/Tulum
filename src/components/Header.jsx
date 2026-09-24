@@ -227,10 +227,11 @@ const styles = {
 
 
 function MossMenuItem({ to, onClick, label, index }) {
-  const half = Array(4).fill(<span>{label}</span>);
   const band = (
     <span className="moss-band">
-      <span className="moss-track">{half}{half}</span>
+      <span className="moss-track">
+        {Array.from({ length: 8 }, (_, i) => <span key={i}>{label}</span>)}
+      </span>
     </span>
   );
   

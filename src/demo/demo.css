@@ -450,3 +450,18 @@
   .adm-board { grid-template-columns: repeat(4, 82%); }
 }
 @media (min-width: 901px) { .adm-mobile-only { display: none !important; } }
+
+/* ─── Preloader (visor de Halden adaptado) ───────────────────────────────── */
+.tl-preloader { position: fixed; inset: 0; z-index: 1000; pointer-events: none; }
+.tl-preloader-veil { position: absolute; inset: 0; background: var(--tl-cream); }
+.tl-preloader-frame { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.tl-preloader-shots { position: absolute; inset: 5px; overflow: hidden; opacity: 0; }
+.tl-preloader-shots img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.35s var(--tl-ease); }
+.tl-preloader-shots img.is-on { opacity: 1; }
+.tl-preloader-corner { position: absolute; display: block; width: 15px; height: 15px; border: 0 solid var(--tl-wine); }
+.tl-preloader-label {
+  position: absolute; left: 0; bottom: -38px; width: 100%; opacity: 0;
+  display: flex; align-items: center; justify-content: space-between; color: var(--tl-wine);
+}
+.tl-preloader-label img { height: 22px; width: auto; }
+.tl-preloader-label span { font-family: var(--font); font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }

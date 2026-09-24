@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
 import ReserveModal from './components/ReserveModal';
+import Preloader from './components/Preloader';
 import Home from './pages/Home';
 import MenuPage from './pages/MenuPage';
 import Checkout from './pages/Checkout';
@@ -70,6 +71,7 @@ function App() {
       <Footer />
       <CartDrawer />
       <ReserveModal />
+      {pathname === '/' && <Preloader />}
     </SmoothScroll>
   );
 }
