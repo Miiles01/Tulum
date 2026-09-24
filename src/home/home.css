@@ -121,27 +121,32 @@
 .hx-title.is-in .hx-sticker { transform: translateX(-50%) rotate(-4deg) scale(1); }
 
 /* Botones */
-.hx-actions { display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 24px; opacity: 0; transform: translateY(16px); transition: opacity 0.8s ease 1s, transform 0.8s var(--ease) 1s; }
+.hx-actions { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 24px; opacity: 0; transform: translateY(16px); transition: opacity 0.8s ease 1s, transform 0.8s var(--ease) 1s; }
 .hx-actions.is-in { opacity: 1; transform: none; }
 .hx-btn-secondary {
   position: relative; overflow: hidden; background: none; border: none; cursor: pointer; color: var(--ink);
-  padding: 12px 24px; font-family: var(--font-display); font-weight: 700; font-size: clamp(18px, 2vw, 26px); letter-spacing: -0.01em;
+  min-height: 64px; padding: 0 30px; font-family: var(--font-display); font-weight: 700; font-size: clamp(18px, 2vw, 26px); letter-spacing: -0.01em;
+  border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--ink); isolation: isolate;
 }
-.hx-btn-secondary::before { content: ''; position: absolute; inset: 0; width: 0; background: var(--ink); transition: width 0.45s var(--ease-sh); }
+.hx-btn-secondary::before { content: ''; position: absolute; inset: 0; width: 0; background: var(--ink); transition: width 0.45s var(--ease-sh); z-index: -1; }
 .hx-btn-secondary span { position: relative; transition: color 0.3s; }
 .hx-btn-secondary:hover::before, .hx-btn-secondary:focus-visible::before { width: 100%; }
 .hx-btn-secondary:hover span, .hx-btn-secondary:focus-visible span { color: var(--paper); }
 .hx-btn-primary {
   display: inline-flex; align-items: stretch; background: var(--ink); color: var(--paper); text-decoration: none;
   font-family: var(--font-display); font-weight: 700; font-size: clamp(18px, 2vw, 26px); letter-spacing: -0.01em;
+  border-radius: 999px; padding: 6px; gap: 4px;
 }
-.hx-btn-primary > span:first-child { padding: 12px 22px; display: flex; align-items: center; }
-.hx-btn-icon { width: 56px; background: var(--pink); color: #fff; overflow: hidden; display: flex; align-items: center; }
-.hx-btn-icon svg { flex: 0 0 56px; transform: translateX(-100%); transition: transform 0.4s var(--ease-sh); }
+.hx-btn-primary > span:first-child { padding: 8px 18px 8px 24px; display: flex; align-items: center; }
+.hx-btn-icon { width: 52px; height: 52px; border-radius: 50%; background: var(--pink); color: #fff; overflow: hidden; display: flex; align-items: center; flex-shrink: 0; }
+.hx-btn-icon svg { flex: 0 0 52px; transform: translateX(-100%); transition: transform 0.4s var(--ease-sh); }
 .hx-btn-primary:hover .hx-btn-icon svg, .hx-btn-primary:focus-visible .hx-btn-icon svg { transform: translateX(0); }
 
 @media (max-width: 767px) {
   .hx-hero { min-height: 0; padding-top: 110px; gap: 36px; }
+  .hx-actions { flex-direction: column; align-items: stretch; }
+  .hx-btn-secondary { text-align: center; }
+  .hx-btn-primary { justify-content: space-between; }
   .hx-hero { --title: 19vw; }
   .hx-main { margin-bottom: 0.9em; }
   .hx-sticker { bottom: auto; top: 88%; font-size: 17px; }
@@ -320,6 +325,3 @@
 .hh-plate.is-cutout img { transform: scale(1.35); filter: drop-shadow(0 10px 14px rgba(96, 3, 4, 0.25)); }
 .hh-plate.is-cutout.is-in img { transform: scale(1.35); }
 .hh-plate.is-cutout::after { display: none; }
-
-/* Botón de reservar: el pill del resto del sitio, un poco más grande en el hero */
-.hx-reserve { padding: 16px 32px; font-size: 16px; }
