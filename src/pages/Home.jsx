@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useDemo } from '../demo/store';
@@ -252,25 +252,57 @@ function Products({ menu, prep }) {
 }
 
 // ─── 05 · Sala (foto con puntos interactivos) ────────────────────────────────
+// Los puntos se anclan a coordenadas de la foto (0–1 sobre la imagen original) y se
+// recalculan según el recorte real de object-fit: cover, así caen sobre el plato en
+// cualquier ancho de pantalla. Los que quedan fuera del recorte no se muestran.
 const ROOMS = [
   {
-    src: IMG.family, alt: 'Family dinner at Tulum', position: '50% 45%', caption: 'Tulum, Vieux-Montréal — Sunday lunch',
-    spots: [{ id: 'guacamole', x: 58, y: 88 }, { id: 'horchata', x: 7, y: 70 }, { id: 'tacos-pastor', x: 20, y: 84 }, { id: 'fajitas', x: 76, y: 78 }],
+    src: IMG.family, w: 1920, h: 1080, pos: [0.5, 0.78], alt: 'Family lunch at Tulum', caption: 'Tulum, Vieux-Montréal — Sunday lunch',
+    spots: [
+      { id: 'michelada', x: 0.075, y: 0.76 },
+      { id: 'tacos-pastor', x: 0.2, y: 0.83 },
+      { id: 'guacamole', x: 0.6, y: 0.88 },
+      { id: 'fajitas', x: 0.8, y: 0.79 },
+    ],
   },
   {
-    src: IMG.shrimp, alt: 'Shrimp by the window', position: '50% 62%', caption: 'Terrace, late afternoon',
-    spots: [{ id: 'ceviche', x: 44, y: 58 }, { id: 'paloma', x: 70, y: 22 }],
+    src: IMG.cocktail, w: 1920, h: 1080, pos: [0.5, 0.5], alt: 'Paloma at the bar', caption: 'The bar — fresh grapefruit, every night',
+    spots: [{ id: 'paloma', x: 0.5, y: 0.52 }],
   },
   {
-    src: IMG.guac, alt: 'Guacamole and totopos', position: '50% 50%', caption: 'The bar — made to order',
-    spots: [{ id: 'guacamole', x: 58, y: 40 }, { id: 'margarita', x: 30, y: 64 }],
+    src: IMG.guac, w: 1920, h: 1080, pos: [0.5, 0.5], alt: 'Guacamole and totopos', caption: 'Guacamole, mashed to order',
+    spots: [{ id: 'guacamole', x: 0.5, y: 0.5 }],
   },
 ];
+
+function useFrameSize(ref) {
+  const [size, setSize] = useState(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([e]) => setSize({ w: e.contentRect.width, h: e.contentRect.height }));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref]);
+  return size;
+}
+
+// Coordenada de la imagen → píxel dentro del marco, con object-fit: cover
+function toFrame(room, size, pt) {
+  const scale = Math.max(size.w / room.w, size.h / room.h);
+  const dw = room.w * scale;
+  const dh = room.h * scale;
+  const ox = (size.w - dw) * room.pos[0];
+  const oy = (size.h - dh) * room.pos[1];
+  return { x: ox + pt.x * dw, y: oy + pt.y * dh };
+}
 
 function Room({ menu }) {
   const { addItem } = useCart();
   const [i, setI] = useState(0);
   const [added, setAdded] = useState(null);
+  const frameRef = useRef(null);
+  const size = useFrameSize(frameRef);
   const room = ROOMS[i];
   const go = (d) => setI((v) => (v + d + ROOMS.length) % ROOMS.length);
 
@@ -282,26 +314,31 @@ function Room({ menu }) {
       </header>
       <div className="hh-rule" />
 
-      <div className="hh-room-frame">
-        <img key={room.src} src={room.src} alt={room.alt} style={{ objectPosition: room.position }} />
-        {room.spots.map((s) => {
+      <div className="hh-room-frame" ref={frameRef}>
+        <img key={room.src} src={room.src} alt={room.alt} style={{ objectPosition: `${room.pos[0] * 100}% ${room.pos[1] * 100}%` }} />
+        {size && room.spots.map((s) => {
           const item = menu.find((m) => m.id === s.id);
           if (!item) return null;
+          const p = toFrame(room, size, s);
+          if (p.x < 16 || p.x > size.w - 16 || p.y < 24 || p.y > size.h - 24) return null;
+          const flip = p.x > size.w * 0.62; // en el lado derecho, la etiqueta crece hacia la izquierda
           return (
             <button
               key={`${i}-${s.id}`}
               type="button"
-              className={`hh-spot ${added === s.id ? 'is-added' : ''}`}
-              style={{ left: `${s.x}%`, top: `${s.y}%` }}
+              className={`hh-spot ${flip ? 'is-flip' : ''} ${added === s.id ? 'is-added' : ''}`}
+              style={{ left: p.x, top: p.y }}
               onClick={() => { addItem(item); setAdded(s.id); setTimeout(() => setAdded(null), 1200); }}
               aria-label={`Add ${item.name} to your order`}
             >
               <span className="hh-spot-dot"><Icon name={added === s.id ? 'check' : 'plus'} size={14} /></span>
-              <span className="hh-spot-text"><strong>{item.name}</strong><small>{money(item.price)}</small></span>
+              <span className="hh-spot-text"><strong>{item.name}</strong><small>{added === s.id ? 'Added to your order' : money(item.price)}</small></span>
             </button>
           );
         })}
-        <p className="hh-room-caption">{room.caption}</p>
+      </div>
+      <div className="hh-room-meta">
+        <p>{room.caption}</p>
         <div className="hh-room-pager">
           <span>{String(i + 1).padStart(2, '0')} / {String(ROOMS.length).padStart(2, '0')}</span>
           <button type="button" aria-label="Previous photo" onClick={() => go(-1)}><Icon name="back" size={16} /></button>
