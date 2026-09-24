@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useCurrentCustomer } from '../demo/store';
 import { openReserve } from './ReserveModal';
 import Icon from '../demo/icons';
-import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import SocialLinks from './SocialLinks';
 
 export default function Header() {
@@ -26,6 +26,13 @@ export default function Header() {
       window.addEventListener("resize", checkMobile);
       return () => window.removeEventListener("resize", checkMobile);
   }, []);
+
+  useEffect(() => {
+      if (!menuOpen) return;
+      const onKey = (e) => e.key === 'Escape' && setMenuOpen(false);
+      window.addEventListener('keydown', onKey);
+      return () => window.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -58,7 +65,6 @@ export default function Header() {
 
   const backgroundColor = useTransform(bgOpacityBase, (o) => `rgba(251, 237, 224, ${isHome ? o : 1})`);
   const backdropFilter = "none";
-  const textColor = "#600304";
   const logoFilter = "none";
   const logoOpacityHome = useTransform(scrollY, [0, 100], [0, 1]);
   const logoOpacity = isHome ? logoOpacityHome : 1;
@@ -80,6 +86,7 @@ export default function Header() {
   return (
     <>
       <motion.header
+        className={menuOpen ? 'moss-header-open' : ''}
         style={{
             width: isMobile ? animatedMobileWidth : animatedDesktopWidth,
             borderRadius: animatedRadius,
@@ -102,8 +109,9 @@ export default function Header() {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         <button
-          className="moss-burger"
-          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+          className={`moss-burger ${menuOpen ? "is-open" : ""}`}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
         >
           <span></span><span></span>
@@ -139,9 +147,9 @@ export default function Header() {
         <nav className="moss-panel" aria-hidden={!menuOpen}>
           <ul className="moss-links">
             <MossMenuItem to="/" onClick={() => { setMenuOpen(false); handleScroll('body'); }} label="Home" index={0} />
-            <MossMenuItem to="/menu" onClick={() => setMenuOpen(false)} label="Order online" index={1} />
-            <MossMenuItem onClick={() => { setMenuOpen(false); handleScroll('.productos-destacados-section'); }} label="Menu" index={2} />
-            <MossMenuItem onClick={() => { setMenuOpen(false); handleScroll('#about-us'); }} label="About Us" index={3} />
+            <MossMenuItem onClick={() => handleScroll('#menu')} label="Menu" index={1} />
+            <MossMenuItem to="/menu" onClick={() => setMenuOpen(false)} label="Order online" index={2} />
+            <MossMenuItem onClick={() => handleScroll('#about-us')} label="About us" index={3} />
             <MossMenuItem onClick={() => { setMenuOpen(false); openReserve(); }} label="Reserve" index={4} />
             <MossMenuItem to="/account" onClick={() => setMenuOpen(false)} label={customer ? 'My rewards' : 'Sign in'} index={5} />
           </ul>
@@ -153,79 +161,13 @@ export default function Header() {
           </div>
           
           <div className="moss-social">
-            <SocialLinks containerStyle={{ display: 'flex', gap: '16px' }} linkStyle={{ color: '#fff' }} />
+            <SocialLinks containerStyle={{ display: 'flex', gap: '16px' }} linkStyle={{ color: '#FBEDE0' }} />
           </div>
         </nav>
       </div>
     </>
   );
 }
-
-const itemVariants = {
-    hidden: { opacity: 0, x: -16, filter: 'blur(4px)' },
-    visible: { opacity: 1, x: 0, filter: 'blur(0px)', transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
-};
-
-function MenuItem({ to, onClick, small, children }) {
-    return (
-        <motion.div variants={itemVariants}>
-            {to ? (
-                <Link to={to} onClick={onClick} style={small ? legalLinkStyle : mobileMenuLinkStyle}>{children}</Link>
-            ) : (
-                <a href="#" onClick={(e) => { e.preventDefault(); if (onClick) onClick(); }} style={small ? legalLinkStyle : mobileMenuLinkStyle}>{children}</a>
-            )}
-        </motion.div>
-    );
-}
-
-const mobileMenuLinkStyle = {
-    fontSize: 'clamp(28px, 5vw, 42px)',
-    fontFamily: 'var(--font)',
-    fontWeight: 500,
-    letterSpacing: '-0.02em',
-    color: 'var(--acero)',
-    display: 'block',
-    textDecoration: 'none',
-    transition: 'opacity 0.2s',
-};
-
-const legalLinkStyle = {
-    fontSize: '14px',
-    fontFamily: 'var(--font)',
-    fontWeight: 400,
-    color: 'var(--text-soft)',
-    display: 'block',
-    textDecoration: 'none',
-};
-
-const styles = {
-    menuColNav: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '18px',
-    },
-    menuColLegal: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '14px',
-    },
-    menuSocialRow: {
-        display: 'flex',
-        gap: '10px',
-        marginTop: '8px',
-    },
-    menuSocialLink: {
-        width: '34px',
-        height: '34px',
-        borderRadius: '50%',
-        border: '1px solid var(--border)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'var(--acero)',
-    },
-};
-
 
 function MossMenuItem({ to, onClick, label, index }) {
   const band = (

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useDemo } from '../demo/store';
 import { CATEGORIES } from '../demo/seed';
@@ -29,7 +30,8 @@ export default function MenuPage() {
   const accepting = useDemo((s) => s.settings.acceptingOrders);
   const prep = useDemo((s) => s.settings.prepMinutes);
   const { count, subtotal, drawerOpen, setDrawerOpen } = useCart();
-  const [cat, setCat] = useState('all');
+  const [params] = useSearchParams();
+  const [cat, setCat] = useState(() => params.get('cat') || 'all');
 
   const cats = CATEGORIES.filter((c) => menu.some((m) => m.category === c.id));
   const visible = cat === 'all' ? cats : cats.filter((c) => c.id === cat);

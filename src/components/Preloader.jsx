@@ -20,7 +20,11 @@ export default function Preloader() {
 
   useEffect(() => {
     document.getElementById('boot-veil')?.remove();
-    if (done) return;
+    if (done) {
+      window.__tulumReady = true;
+      window.dispatchEvent(new Event('tulum:ready'));
+      return;
+    }
 
     const html = document.documentElement;
     html.style.overflow = 'hidden';
@@ -29,6 +33,7 @@ export default function Preloader() {
     const finish = () => {
       try { sessionStorage.setItem(SESSION_KEY, '1'); } catch { /* storage bloqueado */ }
       html.style.overflow = '';
+      window.__tulumReady = true;
       window.dispatchEvent(new Event('tulum:ready'));
       setDone(true);
     };
@@ -37,6 +42,7 @@ export default function Preloader() {
     const tl = gsap.timeline({ onComplete: finish })
       .to(obj, { v: 100, duration: 1.3, ease: 'power2.inOut', onUpdate: () => { countRef.current.textContent = Math.round(obj.v); } }, 0)
       .to(barRef.current, { scaleX: 1, duration: 1.3, ease: 'power2.inOut' }, 0)
+      .add(() => { window.__tulumReady = true; window.dispatchEvent(new Event('tulum:ready')); }, 1.55)
       .to(rootRef.current, { yPercent: -100, duration: 0.9, ease: 'expo.inOut' }, 1.35);
 
     // Red de seguridad: si la pestaña no pinta (requestAnimationFrame en pausa), no bloquea la página

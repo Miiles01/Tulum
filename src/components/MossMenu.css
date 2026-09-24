@@ -5,9 +5,9 @@
   height: 44px;
   border-radius: 50%;
   border: 0;
-  background: var(--light, #fff);
+  background: #fff;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 20px rgba(96,3,4,0.12);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,18 +17,18 @@
   left: 12px;
   width: 20px;
   height: 2px;
-  background: var(--dark, #1c1c1f);
+  background: #600304;
   transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1), top 0.5s cubic-bezier(0.76, 0, 0.24, 1);
 }
 .moss-burger span:nth-child(1) { top: 18px; }
 .moss-burger span:nth-child(2) { top: 24px; }
-.moss-open .moss-burger span:nth-child(1) { top: 21px; transform: rotate(45deg); }
-.moss-open .moss-burger span:nth-child(2) { top: 21px; transform: rotate(-45deg); }
+.moss-burger.is-open span:nth-child(1) { top: 21px; transform: rotate(45deg); }
+.moss-burger.is-open span:nth-child(2) { top: 21px; transform: rotate(-45deg); }
 
 .moss-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(40,2,3,0.55);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.6s cubic-bezier(0.76, 0, 0.24, 1);
@@ -46,11 +46,15 @@
   height: 100svh;
   width: min(420px, 100vw);
   z-index: 200;
-  transform: translateX(-100%);
-  transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+  /* Cerrado: más allá del borde, para que el círculo curvo de detrás no asome */
+  transform: translateX(-130%);
+  visibility: hidden;
+  transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1), visibility 0s linear 0.8s;
 }
 .moss-open .moss-panel {
   transform: translateX(0);
+  visibility: visible;
+  transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1), visibility 0s;
 }
 .moss-panel::before {
   content: "";
@@ -60,9 +64,7 @@
   left: auto;
   width: 200%;
   height: 150%;
-  background: rgba(28, 28, 31, 0.95);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: #600304;
   border-radius: 50%;
   transform: translate(8%, -50%);
   transition: border-radius 0.8s cubic-bezier(0.76, 0, 0.24, 1);
@@ -89,7 +91,7 @@
 .moss-item {
   position: relative;
   display: block;
-  color: var(--light, #fff);
+  color: #FBEDE0;
   text-decoration: none;
   font-size: clamp(32px, 6vw, 44px);
   line-height: 1.2;
@@ -108,7 +110,7 @@
 .moss-band {
   position: absolute;
   inset: 0;
-  background: var(--light, #fff);
+  background: #FBEDE0;
   transform: translateY(101%);
   transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
   display: flex;
@@ -121,7 +123,7 @@
 .moss-track {
   display: flex;
   white-space: nowrap;
-  color: var(--dark, #1c1c1f);
+  color: #600304;
   animation: moss-marquee 6s linear infinite;
 }
 .moss-track span {
@@ -135,9 +137,8 @@
   position: absolute;
   bottom: 40px;
   left: 48px;
-  color: var(--light, #fff);
-  font-size: 11px;
-  letter-spacing: 0.08em;
+  color: #FBEDE0;
+  font-size: 13px;
   opacity: 0;
   transition: opacity 0.5s 0.6s;
   display: flex;
@@ -161,11 +162,17 @@
   opacity: 1;
 }
 .moss-legal-link {
-  color: rgba(255,255,255,0.6);
+  color: rgba(251,237,224,0.65);
   font-size: 14px;
   text-decoration: none;
   transition: color 0.2s;
 }
 .moss-legal-link:hover {
-  color: #fff;
+  color: #FBEDE0;
 }
+
+/* El header queda por encima del panel para que el botón pueda cerrarlo */
+.moss-header-open { z-index: 260 !important; }
+.moss-links { top: 120px; }
+@media (max-width: 480px) { .moss-links { left: 28px; } .moss-legal, .moss-social { left: 28px; } }
+@media (prefers-reduced-motion: reduce) { .moss-panel, .moss-item, .moss-band, .moss-track { transition: none !important; animation: none !important; } }

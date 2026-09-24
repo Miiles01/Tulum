@@ -1,157 +1,356 @@
-import { useRef, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
+import { useMemo, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
+import { useDemo } from '../demo/store';
+import { CATEGORIES } from '../demo/seed';
+import { money } from '../demo/format';
 import { openReserve } from '../components/ReserveModal';
-import Newsletter from '../components/Newsletter';
+import Icon from '../demo/icons';
+import { Line, Plate, Words, useInViewOnce } from '../home/Reveal';
+import '../home/home.css';
 
-const heroProducts = [
-  { id: 1, name: 'Fajitas', price: '$18', src: '/products/tulum/24.webp', top: '25%', left: '10%', width: '15vw', delay: 0.2 },
-  { id: 2, name: 'Burrito', price: '$14', src: '/products/tulum/25.webp', top: '50%', left: '75%', width: '22vw', delay: 0.4 },
-  { id: 3, name: 'Pizza Birria', price: '$22', src: '/products/tulum/26.webp', top: '65%', left: '25%', width: '28vw', delay: 0.6 },
-];
+// Home con la estructura de la plantilla Halden (hero → manifiesto → catálogo → productos
+// → sala → footer), con la tipografía y los colores de Tulum.
 
-function LineReveal({ children, delay = 0, style, className }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-50px' });
+const IMG = {
+  family: '/covers/desktop/2.webp',
+  cocktail: '/covers/desktop/3.webp',
+  guac: '/covers/desktop/4.webp',
+  shrimp: '/brand/post-248.png',
+  horchata: '/brand/post-247-v2.png',
+};
+
+// ─── 01 · Hero ───────────────────────────────────────────────────────────────
+function Hero({ menu }) {
+  const [ref, inView] = useInViewOnce();
+  const fajitas = menu.find((m) => m.id === 'fajitas');
+  const dishes = menu.filter((m) => m.available).length;
   return (
-    <div ref={ref} style={{ overflow: 'hidden', display: 'inline-block', ...style }} className={className}>
-      <motion.div
-        initial={{ y: '100%' }}
-        animate={isInView ? { y: 0 } : { y: '100%' }}
-        transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
-      >
-        {children}
-      </motion.div>
-    </div>
+    <section className="hh-hero" aria-label="Tulum — tequila and tacos in Montréal">
+      <div className="hh-hero-stage">
+        <h1 ref={ref} className={`hh-hero-title ${inView ? 'is-in' : ''}`}>
+          <span className="hh-hero-l1">Salsa verde</span>
+          <span className="hh-hero-l2">on everything<span aria-hidden="true">/</span></span>
+        </h1>
+
+        {/* Marcador arriba a la derecha */}
+        <div className="hh-hero-marker">
+          <div className="hh-cap-col">
+            <Line delay={320}>Menu 2026</Line>
+            <Line delay={380} className="hh-cap-bottom">{dishes} dishes</Line>
+          </div>
+          <Plate src={IMG.cocktail} alt="Tulum signature cocktail" delay={340} className="hh-hero-marker-plate" position="50% 55%" />
+        </div>
+
+        {/* Platillo destacado a la izquierda */}
+        {fajitas && (
+          <div className="hh-hero-left">
+            <div className="hh-cap-col">
+              <Line delay={420}>Fajitas for two</Line>
+              <Line delay={480} className="hh-cap-bottom">{money(fajitas.price)}</Line>
+            </div>
+            <Plate src={fajitas.image} alt="Sizzling fajitas" delay={440} paper fit="contain" className="hh-hero-left-plate" />
+          </div>
+        )}
+
+        <Link to="/menu" className="hh-bracket hh-hero-cta">
+          <span aria-hidden="true">[</span>
+          <Line delay={560}>order online</Line>
+          <span aria-hidden="true">]</span>
+        </Link>
+
+        {/* Foto grande al centro */}
+        <div className="hh-hero-center">
+          <div className="hh-cap-col is-right">
+            <Line delay={500}>The family table</Line>
+            <Line delay={560} className="hh-cap-bottom">Tue – Sun · 12 h – 23 h</Line>
+          </div>
+          <Plate src={IMG.family} alt="A family sharing dishes at Tulum" delay={520} className="hh-hero-center-plate" position="50% 40%" />
+        </div>
+
+        {/* Par de la derecha */}
+        <div className="hh-hero-right">
+          <div className="hh-row">
+            <Line delay={600}>New on the menu</Line>
+            <span className="hh-cap" aria-hidden="true">//</span>
+          </div>
+          <div className="hh-hero-pair">
+            <Plate src={IMG.guac} alt="Guacamole with totopos" delay={620} position="50% 50%" />
+            <Plate src={IMG.shrimp} alt="Garlic shrimp" delay={660} position="50% 70%" />
+          </div>
+        </div>
+
+        <p className="hh-hero-welcome">
+          <Line delay={700}>Welcome to Tulum –</Line>
+          <Line delay={760}>Mexican soul,</Line>
+          <Line delay={820}>made in Montréal.</Line>
+        </p>
+
+        <button type="button" className="hh-bracket hh-hero-reserve" onClick={openReserve}>
+          <span aria-hidden="true">[</span>
+          <Line delay={880}>reserve a table</Line>
+          <span aria-hidden="true">]</span>
+        </button>
+      </div>
+    </section>
   );
 }
 
-function ImageReveal({ src, delay = 0, style }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-50px' });
+// ─── 02 · Manifiesto ─────────────────────────────────────────────────────────
+function Manifesto() {
+  const inline = (src, alt) => <img className="hh-inline-img" src={src} alt={alt} />;
   return (
-    <div ref={ref} style={{ overflow: 'hidden', ...style }}>
-      <motion.img
-        src={src}
-        initial={{ scale: 1.2, opacity: 0 }}
-        animate={isInView ? { scale: 1, opacity: 1 } : { scale: 1.2, opacity: 0 }}
-        transition={{ duration: 1.2, delay, ease: [0.16, 1, 0.3, 1] }}
-        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+    <section className="hh-manifesto" id="about-us">
+      <Words
+        className="hh-manifesto-text"
+        parts={[
+          '(Tulum) is made for ',
+          <em key="e">long, loud tables,</em>,
+          ' for tacos ',
+          inline('/products/tulum/26.webp', 'Pizza birria'),
+          ' passed hand to hand — recipes that taste like home ',
+          inline('/products/tulum/29.webp', 'Churros'),
+          ' in the heart of Montréal, and stay with you long after the last bite.',
+        ]}
       />
-    </div>
+    </section>
+  );
+}
+
+// ─── 03 · Catálogo (categorías) ──────────────────────────────────────────────
+const CAT_IMAGES = {
+  all: ['/products/tulum/24.webp', '/products/tulum/29.webp'],
+  mains: ['/products/tulum/26.webp', '/products/tulum/25.webp'],
+  starters: [IMG.guac, IMG.shrimp],
+  desserts: ['/products/tulum/29.webp', IMG.horchata],
+  drinks: [IMG.cocktail, IMG.horchata],
+};
+
+function Catalogue({ menu }) {
+  const navigate = useNavigate();
+  const rows = useMemo(() => [
+    { id: 'all', name: 'All dishes', count: menu.length },
+    ...CATEGORIES.map((c) => ({ id: c.id, name: c.name, count: menu.filter((m) => m.category === c.id).length })),
+  ], [menu]);
+  const [active, setActive] = useState('mains');
+  const imgs = CAT_IMAGES[active] || CAT_IMAGES.all;
+  const isCutout = (src) => src.includes('/products/');
+
+  return (
+    <section className="hh-section hh-catalogue" id="menu">
+      <header className="hh-section-head">
+        <Line className="hh-label">(02) — Menu</Line>
+        <p className="hh-section-note">
+          Four sections, and that's the whole menu. Made from scratch every morning — if it isn't on this list, we don't make it.
+        </p>
+      </header>
+      <div className="hh-rule" />
+
+      <div className="hh-cat-stage" onMouseLeave={() => setActive('mains')}>
+        <div className="hh-cat-img is-left" key={`l-${active}`}>
+          <img src={imgs[0]} alt="" className={isCutout(imgs[0]) ? 'is-cutout' : ''} />
+        </div>
+        <ul className="hh-cat-list">
+          {rows.map((r, i) => (
+            <li key={r.id}>
+              <button
+                type="button"
+                className={`hh-cat-row ${active === r.id ? 'is-on' : ''}`}
+                onMouseEnter={() => setActive(r.id)}
+                onFocus={() => setActive(r.id)}
+                onClick={() => navigate(r.id === 'all' ? '/menu' : `/menu?cat=${r.id}`)}
+              >
+                <Line delay={i * 60}>{r.name}<sup>{r.count}</sup></Line>
+              </button>
+            </li>
+          ))}
+        </ul>
+        <div className="hh-cat-img is-right" key={`r-${active}`}>
+          <img src={imgs[1]} alt="" className={isCutout(imgs[1]) ? 'is-cutout' : ''} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── 04 · Productos (tarjetas blancas del mismo tamaño) ──────────────────────
+function AddChip({ item }) {
+  const { addItem } = useCart();
+  const [added, setAdded] = useState(false);
+  return (
+    <button
+      type="button"
+      className={`hh-add ${added ? 'is-added' : ''}`}
+      aria-label={`Add ${item.name} to your order`}
+      disabled={!item.available}
+      onClick={() => { addItem(item); setAdded(true); setTimeout(() => setAdded(false), 1000); }}
+    >
+      <Icon name={added ? 'check' : 'plus'} size={16} />
+    </button>
+  );
+}
+
+function Products({ menu, prep }) {
+  const dishes = menu.filter((m) => m.image);
+  const filters = [{ id: 'all', name: 'All' }, ...CATEGORIES.filter((c) => dishes.some((d) => d.category === c.id))];
+  const [filter, setFilter] = useState('all');
+  const list = filter === 'all' ? dishes : dishes.filter((d) => d.category === filter);
+  const trackRef = useRef(null);
+  const scroll = (dir) => {
+    const el = trackRef.current;
+    if (el) el.scrollBy({ left: dir * el.clientWidth * 0.75, behavior: 'smooth' });
+  };
+
+  return (
+    <section className="hh-section hh-products productos-destacados-section">
+      <header className="hh-section-head">
+        <h2 className="hh-h2"><Line>Dishes that tell a story</Line></h2>
+        <p className="hh-section-note">
+          Every recipe holds a piece of our heritage. Sourced daily, prepared with passion, ready in about {prep} minutes.
+        </p>
+      </header>
+      <div className="hh-rule" />
+
+      <div className="hh-products-bar">
+        <div className="hh-pills" role="tablist" aria-label="Filter dishes">
+          {filters.map((f) => {
+            const n = f.id === 'all' ? dishes.length : dishes.filter((d) => d.category === f.id).length;
+            return (
+              <button key={f.id} role="tab" aria-selected={filter === f.id} className={`hh-pill ${filter === f.id ? 'is-on' : ''}`} onClick={() => setFilter(f.id)}>
+                {f.name} ({n})
+              </button>
+            );
+          })}
+        </div>
+        <div className="hh-arrows">
+          <button type="button" aria-label="Previous dishes" onClick={() => scroll(-1)}><Icon name="back" size={18} /></button>
+          <button type="button" aria-label="Next dishes" onClick={() => scroll(1)}><Icon name="arrow" size={18} /></button>
+        </div>
+      </div>
+
+      <div className="hh-cards" ref={trackRef} data-lenis-prevent-wheel>
+        {list.map((d, i) => (
+          <article key={d.id} className={`hh-card ${d.available ? '' : 'is-off'}`}>
+            <div className="hh-card-top">
+              <span className="hh-cap">({String(i + 1).padStart(2, '0')})</span>
+              <AddChip item={d} />
+            </div>
+            <div className="hh-card-photo"><img src={d.image} alt={d.name} loading="lazy" /></div>
+            <div className="hh-card-body">
+              <h3>{d.name}</h3>
+              <p>{d.description}</p>
+            </div>
+            <div className="hh-card-foot">
+              <span className="hh-pill is-static">{d.available ? (d.popular ? 'Popular' : `Ready in ${prep} min`) : 'Sold out'}</span>
+              <strong>{money(d.price)}</strong>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── 05 · Sala (foto con puntos interactivos) ────────────────────────────────
+const ROOMS = [
+  {
+    src: IMG.family, alt: 'Family dinner at Tulum', position: '50% 45%', caption: 'Tulum, Vieux-Montréal — Sunday lunch',
+    spots: [{ id: 'guacamole', x: 58, y: 88 }, { id: 'horchata', x: 7, y: 70 }, { id: 'tacos-pastor', x: 20, y: 84 }, { id: 'fajitas', x: 76, y: 78 }],
+  },
+  {
+    src: IMG.shrimp, alt: 'Shrimp by the window', position: '50% 62%', caption: 'Terrace, late afternoon',
+    spots: [{ id: 'ceviche', x: 44, y: 58 }, { id: 'paloma', x: 70, y: 22 }],
+  },
+  {
+    src: IMG.guac, alt: 'Guacamole and totopos', position: '50% 50%', caption: 'The bar — made to order',
+    spots: [{ id: 'guacamole', x: 58, y: 40 }, { id: 'margarita', x: 30, y: 64 }],
+  },
+];
+
+function Room({ menu }) {
+  const { addItem } = useCart();
+  const [i, setI] = useState(0);
+  const [added, setAdded] = useState(null);
+  const room = ROOMS[i];
+  const go = (d) => setI((v) => (v + d + ROOMS.length) % ROOMS.length);
+
+  return (
+    <section className="hh-section hh-room">
+      <header className="hh-section-head">
+        <h2 className="hh-h2"><Line>Come hungry, stay late</Line></h2>
+        <p className="hh-section-note">Real tables, real nights at 42 Rue McGill. Tap a dish to add it to your order.</p>
+      </header>
+      <div className="hh-rule" />
+
+      <div className="hh-room-frame">
+        <img key={room.src} src={room.src} alt={room.alt} style={{ objectPosition: room.position }} />
+        {room.spots.map((s) => {
+          const item = menu.find((m) => m.id === s.id);
+          if (!item) return null;
+          return (
+            <button
+              key={`${i}-${s.id}`}
+              type="button"
+              className={`hh-spot ${added === s.id ? 'is-added' : ''}`}
+              style={{ left: `${s.x}%`, top: `${s.y}%` }}
+              onClick={() => { addItem(item); setAdded(s.id); setTimeout(() => setAdded(null), 1200); }}
+              aria-label={`Add ${item.name} to your order`}
+            >
+              <span className="hh-spot-dot"><Icon name={added === s.id ? 'check' : 'plus'} size={14} /></span>
+              <span className="hh-spot-text"><strong>{item.name}</strong><small>{money(item.price)}</small></span>
+            </button>
+          );
+        })}
+        <p className="hh-room-caption">{room.caption}</p>
+        <div className="hh-room-pager">
+          <span>{String(i + 1).padStart(2, '0')} / {String(ROOMS.length).padStart(2, '0')}</span>
+          <button type="button" aria-label="Previous photo" onClick={() => go(-1)}><Icon name="back" size={16} /></button>
+          <button type="button" aria-label="Next photo" onClick={() => go(1)}><Icon name="arrow" size={16} /></button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── 06 · Reseñas ────────────────────────────────────────────────────────────
+const QUOTES = [
+  { quote: 'The best tacos al pastor I have had outside of Mexico City. Authentic, fresh and full of flavor.', author: 'María G.', avatar: '/avatares/1.jpg' },
+  { quote: 'The guacamole is made right at the table and you can taste the tradition in every bite.', author: 'James T.', avatar: '/avatares/2.jpg' },
+  { quote: 'A margarita, a ceviche and a long table with friends. That is the perfect Friday in Montréal.', author: 'Elena R.', avatar: '/avatares/3.jpg' },
+];
+
+function Guests() {
+  return (
+    <section className="hh-section hh-guests">
+      <header className="hh-section-head">
+        <Line className="hh-label">(05) — Guests</Line>
+        <p className="hh-section-note">What people tell us after dinner at 42 Rue McGill.</p>
+      </header>
+      <div className="hh-rule" />
+      <div className="hh-quotes">
+        {QUOTES.map((q, i) => (
+          <figure key={q.author} className="hh-quote">
+            <span className="hh-cap">({String(i + 1).padStart(2, '0')})</span>
+            <blockquote>“{q.quote}”</blockquote>
+            <figcaption><img src={q.avatar} alt="" />{q.author}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
   );
 }
 
 export default function Home() {
-  const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 800], [0, 200]);
-
+  const menu = useDemo((s) => s.menu);
+  const prep = useDemo((s) => s.settings.prepMinutes);
   return (
-    <div style={{ background: '#FBEDE0', color: '#600304', minHeight: '100vh', overflowX: 'hidden' }}>
-      
-      {/* ── HERO (Halden Style) ── */}
-      <section style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden', paddingTop: '100px' }}>
-        <motion.div style={{ y: heroY, width: '100%', height: '100%', position: 'relative' }}>
-          
-          <div style={{ position: 'absolute', top: '8%', left: '60%', width: '15vw', height: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-             <ImageReveal src="/products/tulum/28.webp" delay={0.2} style={{ width: '100%', aspectRatio: '4/5', borderRadius: '16px' }} />
-          </div>
-
-          {heroProducts.map((p, i) => (
-            <div key={p.id} className="hide-mobile" style={{ position: 'absolute', top: p.top, left: p.left, width: p.width, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontFamily: 'var(--font)', opacity: 0.8 }}>
-                <LineReveal delay={p.delay + 0.2}>{p.name}</LineReveal>
-                <LineReveal delay={p.delay + 0.3}>{p.price}</LineReveal>
-              </div>
-              <ImageReveal src={p.src} delay={p.delay} style={{ width: '100%', aspectRatio: '1', borderRadius: '24px', mixBlendMode: 'multiply' }} />
-            </div>
-          ))}
-
-          <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', zIndex: 10, width: '90%' }}>
-            <h1 style={{ fontSize: 'clamp(48px, 10vw, 120px)', fontFamily: 'var(--font-display)', lineHeight: 0.9, letterSpacing: '-0.02em', margin: 0 }}>
-              <LineReveal delay={0.1}>Authentic</LineReveal><br/>
-              <LineReveal delay={0.2}><span style={{ color: 'var(--rosa-neon)', fontStyle: 'italic' }}>Tulum</span></LineReveal><br/>
-              <LineReveal delay={0.3}>flavors</LineReveal>
-            </h1>
-            <div style={{ marginTop: '40px', display: 'flex', justifyContent: 'center', gap: '16px' }}>
-               <Link to="/menu" className="tl-btn tl-btn-primary" style={{ padding: '16px 32px', borderRadius: '999px', fontSize: '15px' }}>Order Online</Link>
-               <button onClick={openReserve} style={{ padding: '16px 32px', borderRadius: '999px', fontSize: '15px', background: 'transparent', border: '1px solid rgba(96,3,4,0.2)', color: '#600304', cursor: 'pointer' }}>Reserve a table</button>
-            </div>
-          </div>
-
-          <div style={{ position: 'absolute', bottom: '40px', left: '40px' }}>
-            <LineReveal delay={0.8} style={{ fontSize: '13px', fontFamily: 'var(--font)', fontWeight: 600, letterSpacing: '0.05em' }}>
-              Welcome to Tulum – fresh ingredients, made to last.
-            </LineReveal>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* ── MANIFESTO (Halden Style) ── */}
-      <section style={{ padding: 'clamp(120px, 15vw, 200px) 20px', background: '#600304', color: '#FBEDE0', textAlign: 'center', position: 'relative' }}>
-         <LineReveal delay={0.1} style={{ position: 'absolute', top: '40px', left: '40px', fontSize: '14px', opacity: 0.7 }}>(01) — Manifesto</LineReveal>
-         
-         <div style={{ maxWidth: '1100px', margin: '0 auto', fontSize: 'clamp(32px, 5vw, 64px)', fontFamily: 'var(--font-display)', lineHeight: 1.15, fontWeight: 500 }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: 'clamp(8px, 2vw, 20px)' }}>
-              <LineReveal delay={0.1}>Salsa verde on everything,</LineReveal>
-              <div style={{ width: 'clamp(60px, 10vw, 120px)', height: 'clamp(40px, 6vw, 80px)', borderRadius: '100px', overflow: 'hidden', display: 'inline-block', verticalAlign: 'middle' }}>
-                <ImageReveal src="/products/tulum/24.webp" delay={0.3} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </div>
-              <LineReveal delay={0.2}><span style={{ fontStyle: 'italic', color: 'var(--rosa-neon)' }}>that's the rule</span> —</LineReveal>
-            </div>
-            
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: 'clamp(8px, 2vw, 20px)', marginTop: '8px' }}>
-              <LineReveal delay={0.3}>flavors that belong</LineReveal>
-              <div style={{ width: 'clamp(60px, 10vw, 120px)', height: 'clamp(40px, 6vw, 80px)', borderRadius: '100px', overflow: 'hidden', display: 'inline-block', verticalAlign: 'middle' }}>
-                <ImageReveal src="/products/tulum/27.webp" delay={0.5} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </div>
-              <LineReveal delay={0.4}>in your everyday,</LineReveal>
-            </div>
-
-            <div style={{ marginTop: '8px' }}>
-               <LineReveal delay={0.5}>and stay with you for years to come.</LineReveal>
-            </div>
-         </div>
-      </section>
-
-      {/* ── CATALOGUE (Halden Style Grid) ── */}
-      <section style={{ padding: 'clamp(80px, 10vw, 160px) 40px', background: '#FBEDE0' }}>
-         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '80px', flexWrap: 'wrap', gap: '40px' }}>
-           <LineReveal delay={0.1} style={{ fontSize: 'clamp(32px, 5vw, 64px)', fontFamily: 'var(--font-display)', lineHeight: 1 }}>(02) — Catalogue</LineReveal>
-           <LineReveal delay={0.2} style={{ maxWidth: '400px', fontSize: '15px', lineHeight: 1.5, opacity: 0.8 }}>
-             Nine categories, and that's the whole menu. No shortcuts, no compromises. If it isn't on this list, we don't make it.
-           </LineReveal>
-         </div>
-
-         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px' }}>
-            {[
-              { id: 1, title: 'Tacos', img: '/products/tulum/24.webp' },
-              { id: 2, title: 'Ceviche', img: '/products/tulum/26.webp' },
-              { id: 3, title: 'Enchiladas', img: '/products/tulum/27.webp' },
-              { id: 4, title: 'Margaritas', img: '/products/tulum/28.webp' }
-            ].map((cat, i) => (
-              <Link to="/menu" key={cat.id} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-                <div style={{ width: '100%', aspectRatio: '3/4', borderRadius: '16px', overflow: 'hidden', marginBottom: '16px', background: '#fff' }}>
-                   <ImageReveal src={cat.img} delay={0.1 * i} style={{ width: '100%', height: '100%', objectFit: 'cover', mixBlendMode: 'multiply' }} />
-                </div>
-                <LineReveal delay={0.2 + (0.1*i)} style={{ fontSize: '24px', fontFamily: 'var(--font-display)', fontWeight: 500 }}>{cat.title}</LineReveal>
-              </Link>
-            ))}
-         </div>
-      </section>
-
-      {/* ── ABOUT VIDEO ── */}
-      <section style={{ padding: '0 40px clamp(80px, 10vw, 160px)', background: '#FBEDE0' }}>
-         <LineReveal delay={0.1} style={{ fontSize: '14px', opacity: 0.7, marginBottom: '40px' }}>(03) — The Experience</LineReveal>
-         <div style={{ width: '100%', borderRadius: '24px', overflow: 'hidden', height: '70vh', position: 'relative' }}>
-            <video src="/brand/about-video.mp4" autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-         </div>
-      </section>
-      
-      <div style={{ background: '#FBEDE0', display: 'flex', justifyContent: 'center' }}>
-        <Newsletter />
-      </div>
-
+    <div className="hh">
+      <Hero menu={menu} />
+      <Manifesto />
+      <Catalogue menu={menu} />
+      <Products menu={menu} prep={prep} />
+      <Room menu={menu} />
+      <Guests />
     </div>
   );
 }
