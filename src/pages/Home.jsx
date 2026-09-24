@@ -81,7 +81,7 @@ export default function Home() {
 
           <div style={{ position: 'absolute', bottom: '40px', left: '40px' }}>
             <LineReveal delay={0.8} style={{ fontSize: '13px', fontFamily: 'var(--font)', fontWeight: 600, letterSpacing: '0.05em' }}>
-              WELCOME TO TULUM – FRESH INGREDIENTS, MADE TO LAST.
+              Welcome to Tulum – fresh ingredients, made to last.
             </LineReveal>
           </div>
         </motion.div>

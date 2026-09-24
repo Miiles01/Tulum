@@ -451,17 +451,16 @@
 }
 @media (min-width: 901px) { .adm-mobile-only { display: none !important; } }
 
-/* ─── Preloader (visor de Halden adaptado) ───────────────────────────────── */
-.tl-preloader { position: fixed; inset: 0; z-index: 1000; pointer-events: none; }
-.tl-preloader-veil { position: absolute; inset: 0; background: var(--tl-cream); }
-.tl-preloader-frame { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
-.tl-preloader-shots { position: absolute; inset: 5px; overflow: hidden; opacity: 0; }
-.tl-preloader-shots img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.35s var(--tl-ease); }
-.tl-preloader-shots img.is-on { opacity: 1; }
-.tl-preloader-corner { position: absolute; display: block; width: 15px; height: 15px; border: 0 solid var(--tl-wine); }
-.tl-preloader-label {
-  position: absolute; left: 0; bottom: -38px; width: 100%; opacity: 0;
-  display: flex; align-items: center; justify-content: space-between; color: var(--tl-wine);
+/* ─── Preloader (el de PC Auto adaptado) ─────────────────────────────────── */
+.tl-preloader {
+  position: fixed; inset: 0; z-index: 1000;
+  background: var(--tl-wine); color: var(--tl-cream);
+  display: grid; place-items: end start; padding: clamp(20px, 4vw, 48px);
+  will-change: transform;
 }
-.tl-preloader-label img { height: 22px; width: auto; }
-.tl-preloader-label span { font-family: var(--font); font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+.tl-preloader-label { position: absolute; top: clamp(20px, 4vw, 48px); left: clamp(20px, 4vw, 48px); font-family: var(--font); font-size: clamp(15px, 1.6vw, 20px); opacity: 0.85; }
+.tl-preloader-count {
+  font-family: var(--font-display); font-weight: 900; letter-spacing: -0.04em;
+  font-size: clamp(7rem, 26vw, 22rem); line-height: 0.8; font-variant-numeric: tabular-nums;
+}
+.tl-preloader-bar { position: absolute; left: 0; bottom: 0; height: 4px; width: 100%; background: var(--tl-pink); transform-origin: left; transform: scaleX(0); }
