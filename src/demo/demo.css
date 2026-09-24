@@ -465,7 +465,11 @@
 }
 .tl-preloader-bar { position: absolute; left: 0; bottom: 0; height: 4px; width: 100%; background: var(--tl-pink); transform-origin: left; transform: scaleX(0); }
 
-/* La barra de categorías del menú solo se queda pegada arriba en móvil */
+/* La barra de categorías del menú solo se queda pegada arriba en móvil, justo bajo el
+   navbar (72 px; 1 px de traslape para que no se asome una línea del contenido) */
+@media (max-width: 767px) {
+  .tl-cats { top: 71px; }
+}
 @media (min-width: 768px) {
   .tl-cats { position: static; }
 }
