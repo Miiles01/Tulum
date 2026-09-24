@@ -44,12 +44,15 @@ function FeaturesSection() {
   return (
     <section
       style={{
-        padding: 'clamp(48px, 8vw, 96px) 20px',
+        padding: 'clamp(100px, 12vw, 160px) clamp(20px, 5vw, 60px)',
         position: 'relative',
         zIndex: 1,
         backgroundColor: '#FBEDE0',
       }}
     >
+      <div style={{ position: 'absolute', top: 'clamp(40px, 5vw, 60px)', left: 'clamp(20px, 5vw, 60px)' }}>
+        <p style={{ fontSize: '14px', color: 'rgba(96,3,4,0.5)', fontFamily: 'var(--font)' }}>(02) — What makes us different</p>
+      </div>
       <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 'clamp(28px, 4vw, 48px)' }}>
         {FEATURES.map((f, i) => (
           <motion.div
@@ -181,6 +184,12 @@ export default function Home() {
       {/* ── HERO MWG 050 (DESKTOP) ── */}
       <section ref={mwgHeroRootRef} className="mwg_effect050 desktop-only-hero" style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
         <div ref={mwgHeroPinHeightRef} className="pin-height" style={{ height: '400dvh' }}>
+          <div style={{ position: 'absolute', top: 'clamp(40px, 5vw, 60px)', left: 'clamp(20px, 5vw, 60px)', zIndex: 10, mixBlendMode: 'difference', color: '#fff' }}>
+            <p style={{ fontSize: '14px', fontFamily: 'var(--font)' }}>(00) — Welcome to Tulum</p>
+          </div>
+          <div style={{ position: 'absolute', bottom: 'clamp(40px, 5vw, 60px)', left: 'clamp(20px, 5vw, 60px)', zIndex: 10, mixBlendMode: 'difference', color: '#fff', maxWidth: '300px' }}>
+            <p style={{ fontSize: '16px', fontFamily: 'var(--font)', fontWeight: 500 }}>Timeless flavor, made to last. Taste our heritage.</p>
+          </div>
           <div ref={mwgHeroContainerRef} className="mwg-container" style={{ position: 'relative', height: '100dvh', width: '100%', display: 'block', zIndex: 1 }}>
             <picture className="real-image"><source media="(max-width: 768px)" srcSet="/covers/mobile/1.webp" /><img src="/covers/desktop/1.webp" alt="Tulum 1" /></picture>
             <picture className="real-image"><source media="(max-width: 768px)" srcSet="/covers/mobile/2.webp" /><img src="/covers/desktop/2.webp" alt="Tulum 2" /></picture>
@@ -193,19 +202,27 @@ export default function Home() {
       {/* ── HERO MOBILE (STATIC) ── */}
       <section className="mobile-only-hero" style={{ width: '100%', height: '100dvh', position: 'relative' }}>
         <img src="/brand/portada-mobile.png" alt="Tulum" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <div style={{ position: 'absolute', top: '100px', left: '20px', zIndex: 10, mixBlendMode: 'difference', color: '#fff' }}>
+          <p style={{ fontSize: '14px', fontFamily: 'var(--font)' }}>(00) — Welcome to Tulum</p>
+        </div>
+        <div style={{ position: 'absolute', bottom: '100px', left: '20px', zIndex: 10, mixBlendMode: 'difference', color: '#fff', maxWidth: '240px' }}>
+          <p style={{ fontSize: '16px', fontFamily: 'var(--font)', fontWeight: 500 }}>Timeless flavor, made to last.</p>
+        </div>
       </section>
 
       {/* ── HISTORIA ── */}
-      <section style={{ padding: 'clamp(80px, 10vw, 160px) 20px', textAlign: 'center', background: '#600304' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <p style={{ fontSize: '14px', marginBottom: '16px', color: 'rgba(251,237,224,0.65)', fontFamily: 'var(--font)' }}>The Tulum philosophy</p>
-          <h2 ref={historyTitleRef} style={{ color: '#FBEDE0', fontSize: 'clamp(32px, 7vw, 56px)', lineHeight: 1.05, marginBottom: '16px' }}>
+      <section style={{ padding: 'clamp(120px, 15vw, 200px) 20px', background: '#600304', position: 'relative' }}>
+        <div style={{ position: 'absolute', top: 'clamp(40px, 5vw, 60px)', left: 'clamp(20px, 5vw, 60px)' }}>
+          <p style={{ fontSize: '14px', color: 'rgba(251,237,224,0.65)', fontFamily: 'var(--font)' }}>(01) — The Tulum philosophy</p>
+        </div>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+          <h2 ref={historyTitleRef} style={{ color: '#FBEDE0', fontSize: 'clamp(48px, 8vw, 80px)', lineHeight: 1.05, marginBottom: '32px', letterSpacing: '-0.02em', fontWeight: 500 }}>
             Salsa verde<br />
-            <span style={{ color: 'var(--rosa-neon)', }}>on everything</span><br />
+            <span style={{ color: 'var(--rosa-neon)', fontStyle: 'italic' }}>on everything</span><br />
             That's the rule.
           </h2>
-          <div className="tl-home-ctas">
-            <Link to="/menu" className="tl-btn tl-btn-pink" style={{ padding: '16px 32px', fontSize: '16px' }}>Order online</Link>
+          <div className="tl-home-ctas" style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '24px' }}>
+            <Link to="/menu" className="tl-btn tl-btn-pink" style={{ padding: '16px 32px', fontSize: '16px', borderRadius: '999px', textDecoration: 'none' }}>Order online</Link>
             <button 
               onClick={openReserve}
               style={{
@@ -217,7 +234,7 @@ export default function Home() {
                 fontSize: '16px', 
                 fontWeight: 600, 
                 fontFamily: 'var(--font)', 
-                cursor: 'pointer', maxHeight: '80vh'
+                cursor: 'pointer'
               }}
             >
               Reserve your table
@@ -236,7 +253,7 @@ export default function Home() {
         {/* Mobile: carousel horizontal nativo */}
         <div className="mobile-only-carousel">
           <div style={{ padding: '0 20px 24px', textAlign: 'left' }}>
-            <p style={{ fontSize: '14px', marginBottom: '8px', color: 'rgba(96,3,4,0.5)', fontFamily: 'var(--font)' }}>Our favorites for you</p>
+            <p style={{ fontSize: '14px', marginBottom: '16px', color: 'rgba(96,3,4,0.5)', fontFamily: 'var(--font)' }}>(03) — Our favorites for you</p>
             <h2 style={{ fontSize: 'clamp(36px, 10vw, 48px)', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '16px', fontWeight: 700, lineHeight: 1.1 }}>Dishes that tell a story</h2>
             <p style={{ fontSize: '15px', color: '#600304', opacity: 0.8, lineHeight: 1.5 }}>Every recipe holds a piece of our heritage. Sourced daily and prepared with passion, these are the flavors that define Tulum.</p>
           </div>
@@ -267,7 +284,7 @@ export default function Home() {
                   <div className={`card-content${p.isTitleCard ? '' : ' dish-card'}`} style={p.isTitleCard ? { display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', padding: '0 20px', textAlign: 'left' } : {}}>
                     {p.isTitleCard ? (
                       <>
-                        <p style={{ fontSize: '16px', marginBottom: '12px', color: 'rgba(96,3,4,0.5)', fontFamily: 'var(--font)' }}>Our favorites for you</p>
+                        <p style={{ fontSize: '16px', marginBottom: '24px', color: 'rgba(96,3,4,0.5)', fontFamily: 'var(--font)' }}>(03) — Our favorites for you</p>
                         <h2 style={{ fontSize: 'clamp(48px, 6vw, 72px)', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '24px', fontWeight: 700, lineHeight: 1.1 }}>{p.title}</h2>
                         <p style={{ fontSize: '18px', color: '#600304', opacity: 0.8, lineHeight: 1.5, maxWidth: '400px' }}>{p.description}</p>
                       </>
@@ -315,7 +332,10 @@ export default function Home() {
         </div>
 
         {/* ── ABOUT US ── */}
-        <div id="about-us" style={{ textAlign: 'center', padding: 'clamp(64px, 10vw, 120px) 20px', maxWidth: '800px', margin: '0 auto' }}>
+        <div id="about-us" style={{ textAlign: 'center', padding: 'clamp(120px, 15vw, 200px) clamp(20px, 5vw, 60px)', maxWidth: '1000px', margin: '0 auto', position: 'relative' }}>
+          <div style={{ position: 'absolute', top: 'clamp(40px, 5vw, 60px)', left: 'clamp(20px, 5vw, 60px)', textAlign: 'left' }}>
+            <p style={{ fontSize: '14px', color: 'rgba(96,3,4,0.5)', fontFamily: 'var(--font)' }}>(04) — About us</p>
+          </div>
           <h2 ref={aboutTitleRef} style={{ fontSize: 'clamp(32px, 7vw, 64px)', color: '#600304', fontFamily: 'var(--font-display)', marginBottom: '24px', lineHeight: 1.1, fontWeight: 700 }}>
             We are Tulum.<br />
             <span style={{ color: 'var(--rosa-neon)', }}>More than a meal,</span><br />

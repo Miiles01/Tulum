@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import './MossMenu.css';
 import { useCart } from '../context/CartContext';
 import { useCurrentCustomer } from '../demo/store';
 import { openReserve } from './ReserveModal';
@@ -99,23 +100,13 @@ export default function Header() {
         transition={{ duration: 0.3 }}
       >
 
-        <motion.button
+        <button
+          className="moss-burger"
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
           onClick={() => setMenuOpen((v) => !v)}
-          style={{ background: 'none', border: 'none', padding: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '34px', height: '34px' }}
-          animate={{ color: textColor }}
-          transition={{ duration: 0.3 }}
         >
-          {menuOpen ? (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-              <line x1="5" y1="5" x2="19" y2="19" /><line x1="19" y1="5" x2="5" y2="19" />
-            </svg>
-          ) : (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-            </svg>
-          )}
-        </motion.button>
+          <span></span><span></span>
+        </button>
 
         {/* Logo (fade in al hacer scroll) */}
         <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ display: 'flex', alignItems: 'center', zIndex: 1 }} aria-label="Home">
@@ -142,75 +133,29 @@ export default function Header() {
       </motion.header>
 
       {/* Menú desplegable: panel que cubre la mitad de la pantalla, no fullscreen */}
-      <AnimatePresence>
-        {menuOpen && (
-          <>
-            <motion.div
-                onClick={() => setMenuOpen(false)}
-                style={{
-                    position: 'fixed', inset: 0, height: '100svh', width: '100%',
-                    background: 'transparent', zIndex: 190, cursor: 'pointer'
-                }}
-            />
-            <motion.div
-                initial={{ opacity: 0, scale: 0.98, y: -15 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.98, y: -15 }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                style={{
-                    position: 'fixed', 
-                    left: '50%',
-                    x: '-50%',
-                    top: animatedTop,
-                    marginTop: '68px', // Espacio para el navbar (altura aprox 54px + gap 14px)
-                    width: isMobile ? animatedMobileWidth : animatedDesktopWidth,
-                    maxHeight: 'calc(100vh - 100px)',
-                    backgroundColor: 'rgba(28, 28, 31, 0.85)',
-                    backdropFilter: 'blur(24px)',
-                    WebkitBackdropFilter: 'blur(24px)',
-                    zIndex: 200, 
-                    display: 'flex', 
-                    flexDirection: 'column',
-                    overflowY: 'auto', 
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '32px',
-                    boxShadow: '0 24px 70px rgba(0,0,0,0.4)',
-                }}
-            >
-                <motion.div
-                    className="menu-columns"
-                    style={{ paddingTop: '40px', paddingBottom: '40px' }}
-                    initial="hidden"
-                    animate="visible"
-                    exit="hidden"
-                    variants={{
-                        hidden: {},
-                        visible: { transition: { staggerChildren: 0.055, delayChildren: 0.15 } }
-                    }}
-                >
-                    <nav style={styles.menuColNav}>
-                        <MenuItem onClick={() => handleScroll('body')}>Home</MenuItem>
-                        <MenuItem onClick={() => handleScroll('.productos-destacados-section')}>Menu</MenuItem>
-                        <MenuItem onClick={() => handleScroll('#about-us')}>About Us</MenuItem>
-                        <MenuItem to="/menu" onClick={() => setMenuOpen(false)}>Order online</MenuItem>
-                        <MenuItem onClick={() => { setMenuOpen(false); openReserve(); }}>Reserve a table</MenuItem>
-                        <MenuItem to="/account" onClick={() => setMenuOpen(false)}>{customer ? 'My rewards' : 'Sign in'}</MenuItem>
-
-                    </nav>
-
-                    <div style={styles.menuColLegal}>
-                        <MenuItem onClick={() => handleScroll('.site-footer')} small>Privacy Policy</MenuItem>
-                        <MenuItem onClick={() => handleScroll('.site-footer')} small>Terms & Conditions</MenuItem>
-                        <MenuItem to="/admin" onClick={() => setMenuOpen(false)} small>Staff login</MenuItem>
-                        <motion.div variants={itemVariants}>
-                            <SocialLinks containerStyle={styles.menuSocialRow} linkStyle={styles.menuSocialLink} />
-                        </motion.div>
-                    </div>
-                </motion.div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      <div className={menuOpen ? 'moss-open' : ''}>
+        <div className="moss-overlay" onClick={() => setMenuOpen(false)}></div>
+        <nav className="moss-panel" aria-hidden={!menuOpen}>
+          <ul className="moss-links">
+            <MossMenuItem to="/" onClick={() => { setMenuOpen(false); handleScroll('body'); }} label="Home" index={0} />
+            <MossMenuItem to="/menu" onClick={() => setMenuOpen(false)} label="Order online" index={1} />
+            <MossMenuItem onClick={() => { setMenuOpen(false); handleScroll('.productos-destacados-section'); }} label="Menu" index={2} />
+            <MossMenuItem onClick={() => { setMenuOpen(false); handleScroll('#about-us'); }} label="About Us" index={3} />
+            <MossMenuItem onClick={() => { setMenuOpen(false); openReserve(); }} label="Reserve" index={4} />
+            <MossMenuItem to="/account" onClick={() => setMenuOpen(false)} label={customer ? 'My rewards' : 'Sign in'} index={5} />
+          </ul>
+          
+          <div className="moss-legal">
+            <a href="#" className="moss-legal-link">Privacy Policy</a>
+            <a href="#" className="moss-legal-link">Terms & Conditions</a>
+            <Link to="/admin" onClick={() => setMenuOpen(false)} className="moss-legal-link">Staff login</Link>
+          </div>
+          
+          <div className="moss-social">
+            <SocialLinks containerStyle={{ display: 'flex', gap: '16px' }} linkStyle={{ color: '#fff' }} />
+          </div>
+        </nav>
+      </div>
     </>
   );
 }
@@ -279,3 +224,32 @@ const styles = {
         color: 'var(--acero)',
     },
 };
+
+
+function MossMenuItem({ to, onClick, label, index }) {
+  const half = Array(4).fill(<span>{label}</span>);
+  const band = (
+    <span className="moss-band">
+      <span className="moss-track">{half}{half}</span>
+    </span>
+  );
+  
+  if (to) {
+    return (
+      <li>
+        <Link to={to} className="moss-item" style={{ '--i': index }} onClick={onClick}>
+          {label}
+          {band}
+        </Link>
+      </li>
+    );
+  }
+  return (
+    <li>
+      <a href="#" className="moss-item" style={{ '--i': index }} onClick={(e) => { e.preventDefault(); if (onClick) onClick(); }}>
+        {label}
+        {band}
+      </a>
+    </li>
+  );
+}

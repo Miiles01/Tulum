@@ -1,0 +1,170 @@
+.moss-burger {
+  position: relative;
+  z-index: 210;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--light, #fff);
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.moss-burger span {
+  position: absolute;
+  left: 12px;
+  width: 20px;
+  height: 2px;
+  background: var(--dark, #1c1c1f);
+  transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1), top 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.moss-burger span:nth-child(1) { top: 18px; }
+.moss-burger span:nth-child(2) { top: 24px; }
+.moss-open .moss-burger span:nth-child(1) { top: 21px; transform: rotate(45deg); }
+.moss-open .moss-burger span:nth-child(2) { top: 21px; transform: rotate(-45deg); }
+
+.moss-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+  z-index: 190;
+}
+.moss-open .moss-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.moss-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100svh;
+  width: min(420px, 100vw);
+  z-index: 200;
+  transform: translateX(100%);
+  transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.moss-open .moss-panel {
+  transform: translateX(0);
+}
+.moss-panel::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 200%;
+  height: 150%;
+  background: rgba(28, 28, 31, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 50%;
+  transform: translate(-8%, -50%);
+  transition: border-radius 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+  z-index: -1;
+}
+.moss-open .moss-panel::before {
+  border-radius: 0;
+  transform: translate(0, -50%);
+}
+
+.moss-links {
+  position: absolute;
+  top: 15%;
+  left: 48px;
+  right: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.moss-links li {
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.moss-item {
+  position: relative;
+  display: block;
+  color: var(--light, #fff);
+  text-decoration: none;
+  font-size: clamp(32px, 6vw, 44px);
+  line-height: 1.2;
+  padding-right: 48px;
+  transform: translateY(110%);
+  transition: transform 0.7s cubic-bezier(0.76, 0, 0.24, 1);
+  font-family: var(--font, sans-serif);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.moss-open .moss-item {
+  transform: translateY(0);
+  transition-delay: calc(0.25s + var(--i) * 0.07s);
+}
+
+.moss-band {
+  position: absolute;
+  inset: 0;
+  background: var(--light, #fff);
+  transform: translateY(101%);
+  transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.moss-item:hover .moss-band, .moss-item:focus-visible .moss-band {
+  transform: translateY(0);
+}
+.moss-track {
+  display: flex;
+  white-space: nowrap;
+  color: var(--dark, #1c1c1f);
+  animation: moss-marquee 6s linear infinite;
+}
+.moss-track span {
+  padding-right: 0.6em;
+}
+@keyframes moss-marquee {
+  to { transform: translateX(-50%); }
+}
+
+.moss-social {
+  position: absolute;
+  bottom: 40px;
+  left: 48px;
+  color: var(--light, #fff);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  transition: opacity 0.5s 0.6s;
+  display: flex;
+  gap: 16px;
+}
+.moss-open .moss-social {
+  opacity: 1;
+}
+
+.moss-legal {
+  position: absolute;
+  bottom: 100px;
+  left: 48px;
+  opacity: 0;
+  transition: opacity 0.5s 0.6s;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.moss-open .moss-legal {
+  opacity: 1;
+}
+.moss-legal-link {
+  color: rgba(255,255,255,0.6);
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.moss-legal-link:hover {
+  color: #fff;
+}
