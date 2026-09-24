@@ -236,17 +236,26 @@
   width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(96, 3, 4, 0.3); background: transparent; color: var(--ink);
   display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.25s, color 0.25s;
 }
-.hh-arrows button:hover { background: var(--ink); color: var(--paper); }
+.hh-arrows button:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+.hh-arrows button:disabled { opacity: 0.3; cursor: default; }
 .hh-cards {
   --cols: 4; --gap: clamp(12px, calc(20 * var(--u)), 24px);
   display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
-  gap: var(--gap); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 4px;
+  gap: var(--gap); overflow-x: auto; overflow-y: hidden; scrollbar-width: none;
+  scroll-snap-type: x proximity; scroll-padding-inline: var(--gutter); overscroll-behavior-x: contain;
+  /* El carrusel llega al borde de la pantalla (margen negativo + padding) y deja aire
+     arriba para que la tarjeta pueda levantarse al pasar el cursor sin recortarse */
+  padding: 8px var(--gutter) 8px; margin: -8px calc(-1 * var(--gutter)) -8px;
+  cursor: grab;
 }
+.hh-cards.is-dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+.hh-cards.is-dragging .hh-card { pointer-events: none; }
+.hh-cards img { -webkit-user-drag: none; user-select: none; }
 .hh-cards::-webkit-scrollbar { display: none; }
 @media (max-width: 1023px) { .hh-cards { --cols: 2.3; } }
 @media (max-width: 600px) { .hh-cards { --cols: 1.25; } }
-.hh-card { background: #fff; display: flex; flex-direction: column; padding: 14px; scroll-snap-align: start; min-width: 0; transition: box-shadow 0.35s var(--ease); }
-@media (hover: hover) { .hh-card:hover { box-shadow: 0 18px 40px rgba(96, 3, 4, 0.1); } }
+.hh-card { background: #fff; display: flex; flex-direction: column; padding: 14px; scroll-snap-align: start; min-width: 0; transition: transform 0.35s var(--ease); }
+@media (hover: hover) { .hh-card:hover { transform: translateY(-4px); } }
 .hh-card.is-off { opacity: 0.55; }
 .hh-card-top { display: flex; justify-content: space-between; align-items: center; }
 .hh-add { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--paper); color: var(--ink); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.25s, color 0.25s, transform 0.25s var(--ease); }

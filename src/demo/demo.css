@@ -257,7 +257,7 @@
 @media (max-width: 900px) { .tl-account-grid { grid-template-columns: 1fr; } }
 .tl-loyalty-card {
   position: relative; overflow: hidden; border-radius: 26px; padding: 28px; color: var(--tl-cream);
-  background: radial-gradient(120% 90% at 100% 0%, rgba(237, 74, 155, 0.55) 0%, rgba(237, 74, 155, 0) 55%), var(--tl-wine);
+  background: var(--tl-wine);
   min-height: 250px; display: flex; flex-direction: column; justify-content: space-between; gap: 28px;
 }
 .tl-loyalty-card h2, .tl-loyalty-card h3 { color: var(--tl-cream) !important; }

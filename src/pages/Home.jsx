@@ -239,9 +239,64 @@ function Products({ menu, prep }) {
   const [filter, setFilter] = useState('all');
   const list = filter === 'all' ? dishes : dishes.filter((d) => d.category === filter);
   const trackRef = useRef(null);
+  const [edges, setEdges] = useState({ start: true, end: false });
+
+  // Estado de las flechas: se desactivan al llegar al inicio o al final
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const update = () => setEdges({ start: el.scrollLeft < 4, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 4 });
+    update();
+    el.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => { el.removeEventListener('scroll', update); window.removeEventListener('resize', update); };
+  }, [list.length]);
+
+  // Al cambiar de filtro, el carrusel vuelve al principio
+  useEffect(() => { trackRef.current?.scrollTo({ left: 0 }); }, [filter]);
+
+  // Arrastrar con el mouse en desktop (en touch se usa el deslizamiento nativo)
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    let startX = 0, startLeft = 0, dragging = false, moved = false;
+    const down = (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0 || e.target.closest('button')) return;
+      dragging = true; moved = false; startX = e.clientX; startLeft = el.scrollLeft;
+    };
+    const move = (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > 5) { moved = true; el.classList.add('is-dragging'); el.setPointerCapture(e.pointerId); }
+      if (moved) el.scrollLeft = startLeft - dx;
+    };
+    const up = () => {
+      if (!dragging) return;
+      dragging = false;
+      el.classList.remove('is-dragging');
+    };
+    const click = (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } };
+    el.addEventListener('pointerdown', down);
+    el.addEventListener('pointermove', move);
+    el.addEventListener('pointerup', up);
+    el.addEventListener('pointercancel', up);
+    el.addEventListener('click', click, true);
+    return () => {
+      el.removeEventListener('pointerdown', down);
+      el.removeEventListener('pointermove', move);
+      el.removeEventListener('pointerup', up);
+      el.removeEventListener('pointercancel', up);
+      el.removeEventListener('click', click, true);
+    };
+  }, []);
+
+  // Las flechas avanzan exactamente una tarjeta
   const scroll = (dir) => {
     const el = trackRef.current;
-    if (el) el.scrollBy({ left: dir * el.clientWidth * 0.75, behavior: 'smooth' });
+    const card = el?.querySelector('.hh-card');
+    if (!el || !card) return;
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+    el.scrollBy({ left: dir * (card.offsetWidth + gap), behavior: 'smooth' });
   };
 
   return (
@@ -265,12 +320,12 @@ function Products({ menu, prep }) {
           })}
         </div>
         <div className="hh-arrows">
-          <button type="button" aria-label="Previous dishes" onClick={() => scroll(-1)}><Icon name="back" size={18} /></button>
-          <button type="button" aria-label="Next dishes" onClick={() => scroll(1)}><Icon name="arrow" size={18} /></button>
+          <button type="button" aria-label="Previous dishes" disabled={edges.start} onClick={() => scroll(-1)}><Icon name="back" size={18} /></button>
+          <button type="button" aria-label="Next dishes" disabled={edges.end} onClick={() => scroll(1)}><Icon name="arrow" size={18} /></button>
         </div>
       </div>
 
-      <div className="hh-cards" ref={trackRef} data-lenis-prevent-wheel>
+      <div className="hh-cards" ref={trackRef}>
         {list.map((d, i) => (
           <article key={d.id} className={`hh-card ${d.available ? '' : 'is-off'}`}>
             <div className="hh-card-top">
