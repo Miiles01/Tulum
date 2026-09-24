@@ -622,8 +622,12 @@ input, select, textarea {
     padding: 20px;
     box-shadow: 0 1px 2px rgba(96, 3, 4, 0.05), 0 12px 30px rgba(96, 3, 4, 0.06);
 }
-.mwg_effect087 .card-content.dish-card { background: #FFFFFF; padding: 20px; }
+.mwg_effect087 .card-content.dish-card { background: #FFFFFF; padding: 20px; justify-content: flex-start; }
 .mobile-only-carousel .dish-card { padding: 16px; height: 100%; }
+
+/* Todas las tarjetas del mismo tamaño: se estiran al alto de la más alta y comparten ancho */
+.mwg_effect087 .cards { align-items: stretch; }
+.mobile-only-carousel .carousel-item { width: 290px; min-width: 290px !important; max-width: 290px !important; }
 
 /* Marquee Testimonials */
 .testimonials-marquee-wrapper {
