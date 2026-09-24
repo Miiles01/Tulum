@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
+import { useCurrentCustomer } from '../demo/store';
+import { openReserve } from './ReserveModal';
+import Icon from '../demo/icons';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import SocialLinks from './SocialLinks';
 
 export default function Header() {
   const { count, setDrawerOpen } = useCart();
-  const { user } = useAuth();
+  const customer = useCurrentCustomer();
   const navigate = useNavigate();
   const location = useLocation();
   const isHome = location.pathname === '/';
@@ -57,7 +59,8 @@ export default function Header() {
   const backdropFilter = "none";
   const textColor = "#600304";
   const logoFilter = "none";
-  const logoOpacity = useTransform(scrollY, [0, 100], [0, 1]);
+  const logoOpacityHome = useTransform(scrollY, [0, 100], [0, 1]);
+  const logoOpacity = isHome ? logoOpacityHome : 1;
 
   const handleScroll = (selector) => {
     setMenuOpen(false);
@@ -125,25 +128,16 @@ export default function Header() {
           />
         </Link>
 
-        <div style={{ display: 'flex', gap: '6px', zIndex: 1, alignItems: 'center' }}>
-          <button 
-            aria-label="Reserve"
-            onClick={() => window.location.href = '#reserve'}
-            style={{ 
-              background: '#FFFFFF', 
-              color: '#600304', 
-              border: 'none', 
-              borderRadius: '999px', 
-              padding: '10px 20px', 
-              fontSize: '14px', 
-              fontWeight: 600, 
-              fontFamily: 'var(--font)', 
-              cursor: 'pointer',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            Reserve
+        <div className="tl-head-actions">
+          <button className="tl-head-pill is-white hide-mobile" onClick={openReserve}>Reserve</button>
+          <button className="tl-head-icon" aria-label={customer ? `My account (${customer.points} points)` : 'Sign in'} onClick={() => navigate('/account')}>
+            <Icon name="user" />
           </button>
+          <button className="tl-head-icon" aria-label={`Your order, ${count} items`} onClick={() => setDrawerOpen(true)}>
+            <Icon name="bag" />
+            {count > 0 && <span className="tl-badge-count">{count}</span>}
+          </button>
+          <button className="tl-head-pill is-wine" onClick={() => navigate('/menu')}>Order</button>
         </div>
       </motion.header>
 
@@ -198,12 +192,16 @@ export default function Header() {
                         <MenuItem onClick={() => handleScroll('body')}>Home</MenuItem>
                         <MenuItem onClick={() => handleScroll('.productos-destacados-section')}>Menu</MenuItem>
                         <MenuItem onClick={() => handleScroll('#about-us')}>About Us</MenuItem>
+                        <MenuItem to="/menu" onClick={() => setMenuOpen(false)}>Order online</MenuItem>
+                        <MenuItem onClick={() => { setMenuOpen(false); openReserve(); }}>Reserve a table</MenuItem>
+                        <MenuItem to="/account" onClick={() => setMenuOpen(false)}>{customer ? 'My rewards' : 'Sign in'}</MenuItem>
 
                     </nav>
 
                     <div style={styles.menuColLegal}>
                         <MenuItem onClick={() => handleScroll('.site-footer')} small>Privacy Policy</MenuItem>
                         <MenuItem onClick={() => handleScroll('.site-footer')} small>Terms & Conditions</MenuItem>
+                        <MenuItem to="/admin" onClick={() => setMenuOpen(false)} small>Staff login</MenuItem>
                         <motion.div variants={itemVariants}>
                             <SocialLinks containerStyle={styles.menuSocialRow} linkStyle={styles.menuSocialLink} />
                         </motion.div>

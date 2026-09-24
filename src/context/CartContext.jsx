@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
 const CartContext = createContext(null);
-const STORAGE_KEY = 'loredistrict_cart';
+const STORAGE_KEY = 'tulum_cart';
 
 function loadCart() {
   try {
@@ -12,74 +12,41 @@ function loadCart() {
   }
 }
 
+// Líneas del carrito: { id, name, price, image, qty } — mismo formato que order.items en la demo.
 export function CartProvider({ children }) {
   const [items, setItems] = useState(loadCart);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); } catch { /* noop */ }
   }, [items]);
 
-  function addItem(product, quantity = 1, options = {}, computedPrice = 0) {
+  function addItem(product, qty = 1) {
     setItems((prev) => {
-      // Create a unique hash for the product + options combination
-      const optionsHash = JSON.stringify(options);
-      const existing = prev.find((i) => i.product_id === product.id && i.optionsHash === optionsHash);
-      if (existing) {
-        return prev.map((i) =>
-          (i.product_id === product.id && i.optionsHash === optionsHash) ? { ...i, quantity: i.quantity + quantity } : i
-        );
-      }
-      return [
-        ...prev,
-        {
-          product_id: product.id,
-          name: product.name,
-          image_url: product.image_url,
-          price: computedPrice,
-          quantity,
-          options,
-          optionsHash,
-          cartItemId: Math.random().toString(36).substr(2, 9), // unique ID for UI
-        },
-      ];
+      const existing = prev.find((i) => i.id === product.id);
+      if (existing) return prev.map((i) => (i.id === product.id ? { ...i, qty: i.qty + qty } : i));
+      return [...prev, { id: product.id, name: product.name, price: product.price, image: product.image || null, qty }];
     });
-    setDrawerOpen(true);
   }
 
-  function updateQuantity(cartItemId, quantity) {
-    if (quantity <= 0) {
-      removeItem(cartItemId);
-      return;
-    }
-    setItems((prev) => prev.map((i) => (i.cartItemId === cartItemId ? { ...i, quantity } : i)));
+  function updateQuantity(id, qty) {
+    if (qty <= 0) return removeItem(id);
+    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, qty } : i)));
   }
 
-  function removeItem(cartItemId) {
-    setItems((prev) => prev.filter((i) => i.cartItemId !== cartItemId));
+  function removeItem(id) {
+    setItems((prev) => prev.filter((i) => i.id !== id));
   }
 
   function clearCart() {
     setItems([]);
   }
 
-  const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const count = items.reduce((sum, i) => sum + i.quantity, 0);
+  const subtotal = items.reduce((sum, i) => sum + i.price * i.qty, 0);
+  const count = items.reduce((sum, i) => sum + i.qty, 0);
 
   return (
-    <CartContext.Provider
-      value={{
-        items,
-        addItem,
-        updateQuantity,
-        removeItem,
-        clearCart,
-        subtotal,
-        count,
-        drawerOpen,
-        setDrawerOpen,
-      }}
-    >
+    <CartContext.Provider value={{ items, addItem, updateQuantity, removeItem, clearCart, subtotal, count, drawerOpen, setDrawerOpen }}>
       {children}
     </CartContext.Provider>
   );

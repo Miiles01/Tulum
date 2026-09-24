@@ -9,13 +9,14 @@ gsap.registerPlugin(ScrollTrigger);
 export const SmoothScroll = ({ children }) => {
     const { pathname } = useLocation();
 
-    useEffect(() => {
-        if (pathname.startsWith('/admin')) {
-            window.scrollTo(0, 0);
-        }
-    }, [pathname]);
+    // Sin smooth scroll en el panel admin ni en el login de clientes (regla de diseño)
+    const native = pathname.startsWith('/admin') || pathname.startsWith('/account');
 
-    if (pathname.startsWith('/admin')) {
+    useEffect(() => {
+        if (native) window.scrollTo(0, 0);
+    }, [pathname, native]);
+
+    if (native) {
         return <>{children}</>;
     }
 
@@ -33,8 +34,8 @@ const LenisWrapper = ({ children }) => {
             orientation: 'vertical',
             gestureOrientation: 'vertical',
             smoothWheel: true,
-            wheelMultiplier: 1,
-            touchMultiplier: 2,
+            wheelMultiplier: 0.85,
+            touchMultiplier: 1.5,
             infinite: false,
         });
 

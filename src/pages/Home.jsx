@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SplitType from 'split-type';
 import Newsletter from '../components/Newsletter';
+import { openReserve } from '../components/ReserveModal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -203,9 +204,10 @@ export default function Home() {
             <span style={{ color: 'var(--rosa-neon)', }}>on everything</span><br />
             That's the rule.
           </h2>
-          <div style={{ marginTop: '32px' }}>
+          <div className="tl-home-ctas">
+            <Link to="/menu" className="tl-btn tl-btn-pink" style={{ padding: '16px 32px', fontSize: '16px' }}>Order online</Link>
             <button 
-              onClick={() => window.location.href = '#reserve'}
+              onClick={openReserve}
               style={{
                 background: '#FBEDE0', 
                 color: '#600304', 
@@ -355,6 +357,9 @@ export default function Home() {
           <p ref={productsSubtextRef} style={{ fontSize: '15px', color: 'rgba(96,3,4,0.85)', fontWeight: 600, fontFamily: 'var(--font)', maxWidth: '380px', margin: '0 auto 30px', lineHeight: 1.5 }}>
             There are more flavors waiting for you. Explore our full menu and find your next favorite dish.
           </p>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
+            <Link to="/menu" className="tl-btn tl-btn-primary" style={{ padding: '16px 28px' }}>See the full menu</Link>
+          </div>
           <div className="menu-images-grid">
             <div className="menu-image-left">
               <img src="/brand/post-247-v2.png" alt="Tulum vibes" style={{ width: '100%', height: 'auto', borderRadius: '16px', objectFit: 'cover' }} />
