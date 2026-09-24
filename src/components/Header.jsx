@@ -48,7 +48,6 @@ export default function Header() {
 
   // Framer Motion Transforms
   const widthRange = useTransform(scrollY, [0, 100], ["100%", "50%"]);
-  const mobileWidthRange = useTransform(scrollY, [0, 100], ["100%", "96%"]);
   const borderRadiusRange = useTransform(scrollY, [0, 100], [0, 50]);
   const topRange = useTransform(scrollY, [0, 100], [0, 20]);
   
@@ -59,7 +58,6 @@ export default function Header() {
 
   const springConfig = { stiffness: 400, damping: 40 };
   const animatedDesktopWidth = useSpring(widthRange, springConfig);
-  const animatedMobileWidth = useSpring(mobileWidthRange, springConfig);
   const animatedRadius = useSpring(borderRadiusRange, springConfig);
   const animatedTop = useSpring(topRange, springConfig);
 
@@ -88,9 +86,10 @@ export default function Header() {
       <motion.header
         className={menuOpen ? 'moss-header-open' : ''}
         style={{
-            width: isMobile ? animatedMobileWidth : animatedDesktopWidth,
-            borderRadius: animatedRadius,
-            top: animatedTop,
+            // En móvil el navbar se queda como en su estado inicial: a todo lo ancho, arriba y sin redondear
+            width: isMobile ? '100%' : animatedDesktopWidth,
+            borderRadius: isMobile ? 0 : animatedRadius,
+            top: isMobile ? 0 : animatedTop,
             backgroundColor,
             backdropFilter,
             borderColor: 'transparent',
