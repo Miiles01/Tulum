@@ -146,7 +146,6 @@ function Catalogue({ menu }) {
           Four sections, and that's the whole menu. Made from scratch every morning — if it isn't on this list, we don't make it.
         </p>
       </header>
-      <div className="hh-rule" />
 
       <div className="hh-cat-stage" onMouseLeave={() => setActive('mains')}>
         <div className={`hh-cat-img is-left ${cutClass(imgs[0]) ? 'is-png' : ''}`} key={`l-${active}`}>
@@ -213,7 +212,6 @@ function Products({ menu, prep }) {
           Every recipe holds a piece of our heritage. Sourced daily, prepared with passion, ready in about {prep} minutes.
         </p>
       </header>
-      <div className="hh-rule" />
 
       <div className="hh-products-bar">
         <div className="hh-pills" role="tablist" aria-label="Filter dishes">
@@ -269,7 +267,6 @@ function Guests() {
         <Line className="hh-label">(05) — Guests</Line>
         <p className="hh-section-note">What people tell us after dinner at 42 Rue McGill.</p>
       </header>
-      <div className="hh-rule" />
       <div className="hh-quotes">
         {QUOTES.map((q, i) => (
           <figure key={q.author} className="hh-quote">
