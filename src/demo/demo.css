@@ -464,3 +464,8 @@
   font-size: clamp(7rem, 26vw, 22rem); line-height: 0.8; font-variant-numeric: tabular-nums;
 }
 .tl-preloader-bar { position: absolute; left: 0; bottom: 0; height: 4px; width: 100%; background: var(--tl-pink); transform-origin: left; transform: scaleX(0); }
+
+/* La barra de categorías del menú solo se queda pegada arriba en móvil */
+@media (min-width: 768px) {
+  .tl-cats { position: static; }
+}
