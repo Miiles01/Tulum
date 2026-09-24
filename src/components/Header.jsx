@@ -121,7 +121,7 @@ export default function Header() {
           <motion.img
             src="/brand/logotipo-tulum.svg"
             alt="Tulum"
-            style={{ height: '36px', marginLeft: '12px', opacity: logoOpacity }}
+            style={{ height: isMobile ? '28px' : '36px', marginLeft: isMobile ? '6px' : '12px', opacity: logoOpacity }}
             animate={{ filter: logoFilter }}
             transition={{ duration: 0.3 }}
           />
