@@ -1,4 +1,6 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useDemo } from '../demo/store';
@@ -6,7 +8,9 @@ import { CATEGORIES } from '../demo/seed';
 import { money } from '../demo/format';
 import { openReserve } from '../components/ReserveModal';
 import Icon from '../demo/icons';
-import { Line, Plate, Words, useInViewOnce } from '../home/Reveal';
+import { Line, Words, useInViewOnce } from '../home/Reveal';
+
+gsap.registerPlugin(ScrollTrigger);
 import '../home/home.css';
 
 // Home con la estructura de la plantilla Halden (hero → manifiesto → catálogo → productos
@@ -20,77 +24,113 @@ const IMG = {
   horchata: '/brand/post-247-v2.png',
 };
 
-// ─── 01 · Hero ───────────────────────────────────────────────────────────────
-function Hero({ menu }) {
+// ─── 01 · Hero (referencia: smokehouse-hero.html) ───────────────────────────
+// Título gigante: arriba una palabra que rota dentro de su máscara (Mexican / Late-night),
+// abajo "Kitchen" entra letra por letra y un sticker inclinado aparece al final.
+const MAIN_WORD = 'Kitchen';
+
+function Hero() {
   const [ref, inView] = useInViewOnce();
-  const fajitas = menu.find((m) => m.id === 'fajitas');
-  const dishes = menu.filter((m) => m.available).length;
   return (
-    <section className="hh-hero" aria-label="Tulum — tequila and tacos in Montréal">
-      <div className="hh-hero-stage">
-        <h1 ref={ref} className={`hh-hero-title ${inView ? 'is-in' : ''}`}>
-          <span className="hh-hero-l1">Salsa verde</span>
-          <span className="hh-hero-l2">on everything<span aria-hidden="true">/</span></span>
-        </h1>
+    <section className="hx-hero" aria-label="Tulum — Mexican late-night kitchen in Montréal">
+      <h1 ref={ref} className={`hx-title ${inView ? 'is-in' : ''}`} aria-label="Mexican late-night kitchen">
+        <span className="hx-line hx-rotator" aria-hidden="true">
+          <span className="hx-heading">Mexican</span>
+          <span className="hx-heading">Late-night</span>
+        </span>
+        <span className="hx-line hx-main" aria-hidden="true">
+          <span className="hx-heading">
+            {MAIN_WORD.split('').map((ch, i) => (
+              <span key={i} className="hx-letter"><span style={{ '--i': i }}>{ch}</span></span>
+            ))}
+          </span>
+          <span className="hx-sticker">Salsa verde on everything!</span>
+        </span>
+      </h1>
 
-        {/* Marcador arriba a la derecha */}
-        <div className="hh-hero-marker">
-          <div className="hh-cap-col">
-            <Line delay={320}>Menu 2026</Line>
-            <Line delay={380} className="hh-cap-bottom">{dishes} dishes</Line>
-          </div>
-          <Plate src={IMG.cocktail} alt="Tulum signature cocktail" delay={340} className="hh-hero-marker-plate" position="50% 55%" />
-        </div>
-
-        {/* Platillo destacado a la izquierda */}
-        {fajitas && (
-          <div className="hh-hero-left">
-            <div className="hh-cap-col">
-              <Line delay={420}>Fajitas for two</Line>
-              <Line delay={480} className="hh-cap-bottom">{money(fajitas.price)}</Line>
-            </div>
-            <Plate src={fajitas.image} alt="Sizzling fajitas" delay={440} fit="contain" className="hh-hero-left-plate is-cutout" />
-          </div>
-        )}
-
-        <Link to="/menu" className="hh-bracket hh-hero-cta">
-          <span aria-hidden="true">[</span>
-          <Line delay={560}>order online</Line>
-          <span aria-hidden="true">]</span>
+      <div className={`hx-actions ${inView ? 'is-in' : ''}`}>
+        <button type="button" className="hx-btn-secondary" onClick={openReserve}><span>Reserve a table</span></button>
+        <Link to="/menu" className="hx-btn-primary">
+          <span>View menu</span>
+          <span className="hx-btn-icon" aria-hidden="true">
+            <Icon name="arrow" size={22} />
+            <Icon name="arrow" size={22} />
+          </span>
         </Link>
+      </div>
+    </section>
+  );
+}
 
-        {/* Foto grande al centro */}
-        <div className="hh-hero-center">
-          <div className="hh-cap-col is-right">
-            <Line delay={500}>The family table</Line>
-            <Line delay={560} className="hh-cap-bottom">Tue – Sun · 12 h – 23 h</Line>
-          </div>
-          <Plate src={IMG.family} alt="A family sharing dishes at Tulum" delay={520} className="hh-hero-center-plate" position="50% 40%" />
+// ─── 01b · Video que crece con el scroll (solo tablet y desktop) ─────────────
+const VIDEO_LINE = 'Tulum is a late-night love letter to the Mexican coast, cooked every night on Rue McGill.';
+
+function KitchenVideo() {
+  const wrapRef = useRef(null);
+  const boxRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches);
+  const [textIn, setTextIn] = useState(false);
+  const [mobileRef, mobileIn] = useInViewOnce();
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const on = () => setIsMobile(mq.matches);
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (isMobile) return;
+    const ctx = gsap.context(() => {
+      // Entra pequeño y centrado; mientras bajas se abre hasta casi cubrir la pantalla
+      gsap.fromTo(boxRef.current,
+        { clipPath: 'inset(24% 27% 24% 27% round 28px)' },
+        {
+          clipPath: 'inset(2.5% 1.6% 2.5% 1.6% round 18px)', ease: 'none',
+          scrollTrigger: { trigger: wrapRef.current, start: 'top 85%', end: 'top top', scrub: 0.6 },
+        });
+      gsap.fromTo(boxRef.current.querySelector('video'), { scale: 1.25 }, {
+        scale: 1, ease: 'none',
+        scrollTrigger: { trigger: wrapRef.current, start: 'top 85%', end: 'top top', scrub: 0.6 },
+      });
+      ScrollTrigger.create({
+        trigger: wrapRef.current, start: 'top -15%',
+        onEnter: () => setTextIn(true), onLeaveBack: () => setTextIn(false),
+      });
+    }, wrapRef);
+    const refresh = () => ScrollTrigger.refresh();
+    window.addEventListener('tulum:ready', refresh);
+    return () => { ctx.revert(); window.removeEventListener('tulum:ready', refresh); };
+  }, [isMobile]);
+
+  // React no escribe el atributo "muted": sin él Chrome/Safari pueden bloquear el autoplay
+  useEffect(() => {
+    const v = boxRef.current?.querySelector('video');
+    if (!v) return;
+    v.muted = true;
+    v.play().catch(() => {});
+  }, [isMobile]);
+
+  const shown = isMobile ? mobileIn : textIn;
+  const words = VIDEO_LINE.split(' ');
+
+  return (
+    <section ref={wrapRef} className="hx-video-scroll">
+      <div className="hx-video-sticky">
+        <div ref={boxRef} className="hx-video-box">
+          <video
+            key={isMobile ? 'sq' : 'wide'}
+            src={isMobile ? '/brand/hero-kitchen-square.mp4' : '/brand/hero-kitchen.mp4'}
+            poster={isMobile ? '/brand/hero-kitchen-square-poster.jpg' : '/brand/hero-kitchen-poster.jpg'}
+            autoPlay muted loop playsInline preload="metadata"
+            aria-label="Our cooks at work in the Tulum kitchen"
+          />
+          <h2 ref={mobileRef} className={`hx-video-heading ${shown ? 'is-in' : ''}`}>
+            {words.map((w, i) => (
+              <span key={i} className="hx-vword" style={{ transitionDelay: `${i * 60}ms` }}>{w}{' '}</span>
+            ))}
+          </h2>
         </div>
-
-        {/* Par de la derecha */}
-        <div className="hh-hero-right">
-          <div className="hh-row">
-            <Line delay={600}>New on the menu</Line>
-            <span className="hh-cap" aria-hidden="true">//</span>
-          </div>
-          <div className="hh-hero-pair">
-            <Plate src={IMG.guac} alt="Guacamole with totopos" delay={620} position="50% 50%" />
-            <Plate src={IMG.shrimp} alt="Garlic shrimp" delay={660} position="50% 70%" />
-          </div>
-        </div>
-
-        <p className="hh-hero-welcome">
-          <Line delay={700}>Welcome to Tulum –</Line>
-          <Line delay={760}>Mexican soul,</Line>
-          <Line delay={820}>made in Montréal.</Line>
-        </p>
-
-        <button type="button" className="hh-bracket hh-hero-reserve" onClick={openReserve}>
-          <span aria-hidden="true">[</span>
-          <Line delay={880}>reserve a table</Line>
-          <span aria-hidden="true">]</span>
-        </button>
       </div>
     </section>
   );
@@ -285,7 +325,8 @@ export default function Home() {
   const prep = useDemo((s) => s.settings.prepMinutes);
   return (
     <div className="hh">
-      <Hero menu={menu} />
+      <Hero />
+      <KitchenVideo />
       <Products menu={menu} prep={prep} />
       <Manifesto />
       <Catalogue menu={menu} />
