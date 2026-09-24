@@ -1,4 +1,6 @@
-import { useRef, useState, useEffect } from 'react';
+import re
+
+content = '''import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
 import { openReserve } from '../components/ReserveModal';
@@ -155,3 +157,7 @@ export default function Home() {
     </div>
   );
 }
+'''
+
+with open('src/pages/Home.jsx', 'w') as f:
+    f.write(content)
