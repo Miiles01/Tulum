@@ -139,7 +139,7 @@ function Catalogue({ menu }) {
   return (
     <section className="hh-section hh-catalogue" id="menu">
       <header className="hh-section-head">
-        <Line className="hh-label">(02) — Menu</Line>
+        <Line className="hh-label">(04) — Menu</Line>
         <p className="hh-section-note">
           Four sections, and that's the whole menu. Made from scratch every morning — if it isn't on this list, we don't make it.
         </p>
@@ -360,7 +360,7 @@ function Guests() {
   return (
     <section className="hh-section hh-guests">
       <header className="hh-section-head">
-        <Line className="hh-label">(05) — Guests</Line>
+        <Line className="hh-label">(06) — Guests</Line>
         <p className="hh-section-note">What people tell us after dinner at 42 Rue McGill.</p>
       </header>
       <div className="hh-rule" />
@@ -383,9 +383,9 @@ export default function Home() {
   return (
     <div className="hh">
       <Hero menu={menu} />
+      <Products menu={menu} prep={prep} />
       <Manifesto />
       <Catalogue menu={menu} />
-      <Products menu={menu} prep={prep} />
       <Room menu={menu} />
       <Guests />
     </div>

@@ -298,3 +298,6 @@
 @media (max-width: 520px) {
   .hh-footer-cols { grid-template-columns: 1fr 1fr; row-gap: 32px; }
 }
+
+/* Platillos va justo después del hero y antes del manifiesto (bloque vino): necesita aire abajo */
+.hh-products { padding-bottom: clamp(72px, calc(120 * var(--u)), 140px); }
