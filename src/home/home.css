@@ -282,3 +282,12 @@
   .hh-manifesto { padding-top: var(--sec); padding-bottom: var(--sec); }
   .hh-cat-stage { padding-bottom: 0; }
 }
+
+/* Platillos en PNG: se ven flotando, sin caja blanca, con su sombra */
+.hh-cat-img.is-png { background: transparent; box-shadow: none; overflow: visible; }
+.hh-cat-img.is-png img { filter: drop-shadow(0 18px 24px rgba(96, 3, 4, 0.22)); }
+.hh-plate.is-cutout { overflow: visible; }
+.hh-plate.is-cutout .hh-plate-inner { background: transparent; }
+.hh-plate.is-cutout img { transform: scale(1.35); filter: drop-shadow(0 10px 14px rgba(96, 3, 4, 0.25)); }
+.hh-plate.is-cutout.is-in img { transform: scale(1.35); }
+.hh-plate.is-cutout::after { display: none; }

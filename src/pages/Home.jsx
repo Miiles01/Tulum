@@ -49,7 +49,7 @@ function Hero({ menu }) {
               <Line delay={420}>Fajitas for two</Line>
               <Line delay={480} className="hh-cap-bottom">{money(fajitas.price)}</Line>
             </div>
-            <Plate src={fajitas.image} alt="Sizzling fajitas" delay={440} paper fit="contain" className="hh-hero-left-plate" />
+            <Plate src={fajitas.image} alt="Sizzling fajitas" delay={440} fit="contain" className="hh-hero-left-plate is-cutout" />
           </div>
         )}
 
@@ -149,7 +149,7 @@ function Catalogue({ menu }) {
       <div className="hh-rule" />
 
       <div className="hh-cat-stage" onMouseLeave={() => setActive('mains')}>
-        <div className="hh-cat-img is-left" key={`l-${active}`}>
+        <div className={`hh-cat-img is-left ${cutClass(imgs[0]) ? 'is-png' : ''}`} key={`l-${active}`}>
           <img src={imgs[0]} alt="" className={cutClass(imgs[0])} />
         </div>
         <ul className="hh-cat-list">
@@ -168,7 +168,7 @@ function Catalogue({ menu }) {
           ))}
         </ul>
         {imgs[1] ? (
-          <div className="hh-cat-img is-right" key={`r-${active}`}>
+          <div className={`hh-cat-img is-right ${cutClass(imgs[1]) ? 'is-png' : ''}`} key={`r-${active}`}>
             <img src={imgs[1]} alt="" className={cutClass(imgs[1])} />
           </div>
         ) : <div className="hh-cat-img-spacer" aria-hidden="true" />}
