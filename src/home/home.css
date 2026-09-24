@@ -184,6 +184,8 @@
 .hh-cat-img.is-right { justify-self: center; transform: rotate(5deg); grid-column: 3; grid-row: 1; margin-top: -30%; }
 .hh-cat-img img { width: 100%; height: 100%; object-fit: cover; }
 .hh-cat-img img.is-cutout { object-fit: contain; transform: scale(1.45); }
+.hh-cat-img img.is-cutout.is-tight { transform: none; padding: 9%; }
+.hh-cat-img-spacer { grid-column: 3; grid-row: 1; }
 @keyframes hh-cat-in { from { opacity: 0; translate: 0 18px; } }
 @media (max-width: 767px) {
   .hh-cat-stage { grid-template-columns: 1fr; }
@@ -301,3 +303,13 @@
 
 /* Platillos va justo después del hero y antes del manifiesto (bloque vino): necesita aire abajo */
 .hh-products { padding-bottom: clamp(72px, calc(120 * var(--u)), 140px); }
+
+/* Más aire vertical entre secciones en tablet y desktop (móvil conserva el suyo) */
+@media (min-width: 768px) {
+  .hh { --sec: clamp(128px, calc(190 * var(--u)), 220px); }
+  .hh-section { padding-top: var(--sec); }
+  .hh-products { padding-bottom: var(--sec); }
+  .hh-guests { padding-bottom: var(--sec); }
+  .hh-manifesto { padding-top: var(--sec); padding-bottom: var(--sec); }
+  .hh-cat-stage { padding-bottom: 0; }
+}

@@ -26,7 +26,7 @@ export const MENU = [
     description: 'Three marinated pork tacos with pineapple, onion and cilantro on handmade corn tortillas.' },
   { id: 'quesadilla', category: 'mains', name: 'Quesadilla de flor de calabaza', price: 14,
     description: 'Squash blossom, epazote and Oaxaca cheese in a blue corn tortilla.' },
-  { id: 'guacamole', category: 'starters', name: 'Guacamole & totopos', price: 12, popular: true,
+  { id: 'guacamole', category: 'starters', name: 'Guacamole & totopos', price: 12, image: '/products/tulum/guacamole.webp', popular: true,
     description: 'Avocado mashed to order with lime, serrano and cilantro. Warm corn chips on the side.' },
   { id: 'ceviche', category: 'starters', name: 'Ceviche de pescado', price: 16,
     description: 'Fresh fish cured in lime with cucumber, red onion, jalapeño and avocado.' },

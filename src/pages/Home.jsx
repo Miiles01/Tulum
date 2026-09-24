@@ -118,11 +118,12 @@ function Manifesto() {
 }
 
 // ─── 03 · Catálogo (categorías) ──────────────────────────────────────────────
+// Recortes PNG (fondo transparente) donde existen; bebidas usa sus dos fotos de vaso
 const CAT_IMAGES = {
   all: ['/products/tulum/24.webp', '/products/tulum/29.webp'],
   mains: ['/products/tulum/26.webp', '/products/tulum/25.webp'],
-  starters: [IMG.guac, IMG.shrimp],
-  desserts: ['/products/tulum/29.webp', IMG.horchata],
+  starters: ['/products/tulum/guacamole.webp'],
+  desserts: ['/products/tulum/29.webp'],
   drinks: [IMG.cocktail, IMG.horchata],
 };
 
@@ -134,7 +135,8 @@ function Catalogue({ menu }) {
   ], [menu]);
   const [active, setActive] = useState('mains');
   const imgs = CAT_IMAGES[active] || CAT_IMAGES.all;
-  const isCutout = (src) => src.includes('/products/');
+  // Los recortes 24–29 traen mucho margen transparente; el del guacamole viene ajustado
+  const cutClass = (src) => (!src.includes('/products/') ? '' : src.includes('guacamole') ? 'is-cutout is-tight' : 'is-cutout');
 
   return (
     <section className="hh-section hh-catalogue" id="menu">
@@ -148,7 +150,7 @@ function Catalogue({ menu }) {
 
       <div className="hh-cat-stage" onMouseLeave={() => setActive('mains')}>
         <div className="hh-cat-img is-left" key={`l-${active}`}>
-          <img src={imgs[0]} alt="" className={isCutout(imgs[0]) ? 'is-cutout' : ''} />
+          <img src={imgs[0]} alt="" className={cutClass(imgs[0])} />
         </div>
         <ul className="hh-cat-list">
           {rows.map((r, i) => (
@@ -165,9 +167,11 @@ function Catalogue({ menu }) {
             </li>
           ))}
         </ul>
-        <div className="hh-cat-img is-right" key={`r-${active}`}>
-          <img src={imgs[1]} alt="" className={isCutout(imgs[1]) ? 'is-cutout' : ''} />
-        </div>
+        {imgs[1] ? (
+          <div className="hh-cat-img is-right" key={`r-${active}`}>
+            <img src={imgs[1]} alt="" className={cutClass(imgs[1])} />
+          </div>
+        ) : <div className="hh-cat-img-spacer" aria-hidden="true" />}
       </div>
     </section>
   );
